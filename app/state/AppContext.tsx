@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useReducer } from 'react';
+import { ReactNode, createContext, useReducer, useContext } from 'react';
 import { initialState } from './initialState';
 import { reducer } from './reducer';
 import { Actions } from './actions';
@@ -13,6 +13,7 @@ export const AppContext = createContext<ContextType>({state: initialState, dispa
 type Props = {
    children: ReactNode
 }
+
 export const AppProvider = ({children}: Props) => {
    const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -21,4 +22,10 @@ export const AppProvider = ({children}: Props) => {
          {children}
       </AppContext.Provider>
    )
+}
+
+export function useAppContext() {
+   const context = useContext(AppContext)
+   if (!context) throw new Error("useAppContext must be used within AppProvider")
+   return context
 }
