@@ -12,11 +12,11 @@ export function useBoards(): UseBoardsReturn {
    const boards = state.boards
 
    function addBoard(title: string) {
-      dispatch({ type: "ADD_BOARD", payload: {title: title} })
+      dispatch({ type: "ADD_BOARD", payload: {title} })
    }
 
    function deleteBoard(id: string) {
-      dispatch({ type: "DELETE_BOARD", payload: {id: id}})
+      dispatch({ type: "DELETE_BOARD", payload: {id}})
    }
 
    return { boards, addBoard, deleteBoard}

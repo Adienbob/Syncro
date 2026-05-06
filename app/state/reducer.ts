@@ -19,7 +19,7 @@ export function reducer(state: AppState, action: Actions) {
          return {
             ...state,
             tasks: [...state.tasks, {
-               id: action.payload.id,
+               id: crypto.randomUUID(),
                title: action.payload.title,
                status: action.payload.status ?? "todo",
                boardId: action.payload.boardId
@@ -34,17 +34,19 @@ export function reducer(state: AppState, action: Actions) {
          return {
             ...state,
             tasks: state.tasks.map((t) => {
-               let updatedTask = t
-               
-               if (action.payload.newBoardId) {
-                  updatedTask = {...updatedTask, boardId: action.payload.newBoardId}
-               }
-
-               if (action.payload.newStatus) {
-                  updatedTask = {...updatedTask, status: action.payload.newStatus}
-               }
-
-               return updatedTask
+               if (t.id === action.payload.id) {
+                  let updatedTask = t
+                  
+                  if (action.payload.newBoardId) {
+                     updatedTask = {...updatedTask, boardId: action.payload.newBoardId}
+                  }
+   
+                  if (action.payload.newStatus) {
+                     updatedTask = {...updatedTask, status: action.payload.newStatus}
+                  }
+   
+                  return updatedTask
+               } else return t
             })
          }
       case "EDIT_TASK": 

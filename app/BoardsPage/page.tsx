@@ -1,12 +1,11 @@
 "use client"
 
-import { useAppContext } from "@/app/state/AppContext"
 import { useState } from "react";
 import Link from "next/link";
+import { useBoards } from "../features/boards/hooks/useBoards";
 
 export default function Boards() {
-   const {state, dispatch} = useAppContext()
-   const boards = state.boards
+   const { boards, addBoard, deleteBoard } = useBoards()   
    const [isOpen, setIsOpen] = useState(false)
    const [inputState, setInputState] = useState<string>("")
 
@@ -24,7 +23,7 @@ export default function Boards() {
                   <input type="text" onChange={(e) => setInputState(e.target.value)} />
                   <button onClick={() => {
                      setIsOpen(false)
-                     dispatch({type: "ADD_BOARD", payload: {title: inputState}})
+                     addBoard(inputState)
                   }}>Submit</button>
                </div>
             </div>
@@ -36,7 +35,7 @@ export default function Boards() {
                      <span>created at: {b.createdAt}</span>
                      <span>{b.id}</span>
                      <button onClick={(e) => {
-                        dispatch({type: "DELETE_BOARD", payload: {id: b.id}})
+                        deleteBoard(b.id)
                         e.preventDefault()
                         e.stopPropagation()
                      }}>Delete</button>
