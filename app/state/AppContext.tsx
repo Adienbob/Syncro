@@ -1,25 +1,37 @@
 "use client"
-import { ReactNode, createContext, useReducer, useContext } from 'react';
-import { initialState } from './initialState';
+import { ReactNode, createContext, useReducer, useContext, useEffect, useState } from 'react';
+import { defaultState, getInitialState } from './initialState';
 import { reducer } from './reducer';
 import { Actions } from './actions';
 
 type ContextType = {
-   state: typeof initialState
-   dispatch: React.Dispatch<Actions>;
+  state: typeof defaultState
+  dispatch: React.Dispatch<Actions>;
 }
 
-export const AppContext = createContext<ContextType>({state: initialState, dispatch: () => null });
+export const AppContext = createContext<ContextType>({ state: defaultState, dispatch: () => null });
 
 type Props = {
    children: ReactNode
 }
 
-export const AppProvider = ({children}: Props) => {
-   const [state, dispatch] = useReducer(reducer, initialState);
+export const AppProvider = ({ children }: Props) => {
+   const [state, dispatch] = useReducer(reducer, undefined, getInitialState);
+   const [isHydrated, setIsHydrated] = useState(false)
+
+   useEffect(() => {
+      setIsHydrated(true)
+   }, [])
+
+   useEffect(() => {
+      localStorage.setItem("syncro-data", JSON.stringify(state))
+      setIsHydrated(true)
+   }, [state])
+
+   if (!isHydrated) return null
 
    return (
-      <AppContext.Provider value={{state, dispatch}}>
+      <AppContext.Provider value={{ state, dispatch }}>
          {children}
       </AppContext.Provider>
    )
