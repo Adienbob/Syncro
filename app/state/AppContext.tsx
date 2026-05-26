@@ -5,8 +5,8 @@ import { reducer } from './reducer';
 import { Actions } from './actions';
 
 type ContextType = {
-  state: typeof defaultState
-  dispatch: React.Dispatch<Actions>;
+   state: typeof defaultState
+   dispatch: React.Dispatch<Actions>;
 }
 
 export const AppContext = createContext<ContextType>({ state: defaultState, dispatch: () => null });
@@ -18,15 +18,14 @@ type Props = {
 export const AppProvider = ({ children }: Props) => {
    const [state, dispatch] = useReducer(reducer, undefined, getInitialState);
    const [isHydrated, setIsHydrated] = useState(false)
-
+   
    useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsHydrated(true)
-   }, [])
-
-   useEffect(() => {
       localStorage.setItem("syncro-data", JSON.stringify(state))
-      setIsHydrated(true)
    }, [state])
+
+
 
    if (!isHydrated) return null
 
