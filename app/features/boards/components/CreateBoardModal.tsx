@@ -7,10 +7,13 @@ export default function CreateBoard() {
    const [inputState, setInputState] = useState<string>("")
    
    return (
-      <div>
-         <button onClick={() => setIsOpen(true)}>
-            Create Board
-         </button>
+      <>
+         <div className="mb-8 flex justify-between items-center">
+            <h1 className="text-[32px] leading-10 -tracking-[0.32px] font-semibold text-text-primary">My Boards</h1>
+            <button className="px-4 py-2 bg-primary rounded-[8px] text-text-primary" onClick={() => setIsOpen(true)}>
+               Create Board
+            </button>
+         </div>
          <div className={isOpen ? "block" : "hidden"}>
             <span>please enter the title of your board</span>
             <input type="text" onChange={(e) => setInputState(e.target.value)} />
@@ -19,6 +22,6 @@ export default function CreateBoard() {
                addBoard(inputState)
             }}>Submit</button>
          </div>
-      </div>
+      </>
    )
 }

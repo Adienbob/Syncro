@@ -11,10 +11,9 @@ export default function TaskCard(task: Task) {
    // Moving Task
    const [movingTaskId, setMovingTaskId] = useState<string | null>(null)
    const [newBoardId, setNewBoardId] = useState("")
-
    return (
-      <div key={task.id}>
-         <span>{task.title}</span>
+      <article className="bg-surface-low p-4 border border-border rounded-[8px]">
+         <h3 className="text-inverse-surface leading-[24px] font-semibold">{task.title}</h3>
          <span>{task.status}</span>
          <button onClick={() => deleteTask(task.id)}>Delete Task</button>
          {
@@ -44,6 +43,6 @@ export default function TaskCard(task: Task) {
                setEditingTaskId(null)
             }}>Confirm</button>
          </div>
-      </div>
+      </article>
    )
 }

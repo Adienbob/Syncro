@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AppProvider } from "./state/AppContext";
+import Header from "./shared/ui/Header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,9 +19,12 @@ export default function RootLayout({
       className={`h-full antialiased`}
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col">
-        <AppProvider>
-          {children}
-        </AppProvider>
+        <main className="bg-input-bg">
+          <Header />
+          <AppProvider>
+            {children}
+          </AppProvider>
+        </main>
       </body>
     </html>
   );
