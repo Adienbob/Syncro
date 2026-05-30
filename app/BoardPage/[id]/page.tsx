@@ -22,7 +22,12 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
       <div className="p-6">
          <div className="flex justify-between items-center mb-4">
             <div className="flex gap-4">
-               <button>icon back</button>
+               <button className="" onClick={() => router.push("/BoardsPage")}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M3.825 9L9.425 14.6L8 16L0 8L8 0L9.425 1.4L3.825 7H16V9H3.825Z" fill="#CCC3D8"/>
+                  </svg>
+
+               </button>
                <h1 className="text-primary-light text-[20px] leading-[28px] font-bold">{currentBoard?.title}</h1>
             </div>
             <AddTaskModal id={id} />

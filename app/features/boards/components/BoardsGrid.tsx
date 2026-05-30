@@ -5,7 +5,7 @@ export default function BoardsGrid() {
    const { boards } = useBoards()   
    
    return (
-      <div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
          {boards.length > 0 ? boards.map( b => (
             <Link key={b.id} href={`/BoardPage/${b.id}`}>
                <BoardCard title={b.title} id={b.id} createdAt={b.createdAt} />
