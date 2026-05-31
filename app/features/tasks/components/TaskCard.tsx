@@ -2,12 +2,18 @@ import { useTasks } from "../hooks/useTasks"
 import { useState } from "react"
 import { Task } from "@/app/types/models"
 
-export default function TaskCard(task: Task) {
+export default function TaskCard({task}: {task: Task}) {
    const { deleteTask, editTask, moveTask} = useTasks(task.boardId)
 
    // Editing task
-   const [editingTittle, setEditingTittle] = useState("")
-   const [editingTaskId, setEditingTaskId] = useState<string | null>(null)
+   const [editForm, setEditForm] = useState({
+      id: "",
+      title: "",
+      description: "",
+      priority: "medium" as "low" | "medium" | "high",
+      dueDate: "",
+   });
+
    // Moving Task
    const [movingTaskId, setMovingTaskId] = useState<string | null>(null)
    const [newBoardId, setNewBoardId] = useState("")
@@ -19,8 +25,13 @@ export default function TaskCard(task: Task) {
                <button 
                   className="text-on-surface-variant hover:text-amber-200 transition-colors"
                   onClick={() => {
-                     setEditingTaskId(task.id)
-                     setEditingTittle(task.title)
+                     setEditForm({
+                        id: task.id,
+                        title: task.title ?? "",
+                        description: task.description ?? "",
+                        priority: task.priority,
+                        dueDate: task.dueDate ?? "",
+                     });
                   }}
                >
                <svg
@@ -52,30 +63,124 @@ export default function TaskCard(task: Task) {
             </div>
          </div>
          <h3 className="text-inverse-surface leading-[24px] font-semibold">{task.title}</h3>
-         <p className="text-sm leading-5 text-on-surface-variant">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla quasi quia, iure pariatur asperiores vero ad molestias ab odit ducimus, unde illum sunt porro voluptate sint quisquam alias error aliquid.</p>
+         <p className="text-sm leading-5 text-on-surface-variant">{task.description}</p>
+         
+         {/* Move to another board */}
          <div className="flex justify-between">
             <button onClick={() => setMovingTaskId(task.id)}>Move To Another Board</button>
             <div className={movingTaskId === task.id ? "block" : "hidden"}>
                <span>New Board Id</span>
+               <span>{task.description}</span>
                <input type="text" onChange={(e) => setNewBoardId(e.target.value)} />
                <button onClick={() => {
                   moveTask(task.id, undefined, newBoardId)
                   setMovingTaskId(null)
                }}>Confirm</button>
             </div>
-               {
-                  task.status === "todo" ? 
-                  <button onClick={() => moveTask(task.id, "done")}>Move To Done</button>
-                  :
-                  <button onClick={() => moveTask(task.id, "todo")}>Move To Todo</button>
+
+            {/* Move task */}
+            {
+               task.status === "todo" ? 
+               <button onClick={() => moveTask(task.id, "done")}>Move To Done</button>
+               :
+               <button onClick={() => moveTask(task.id, "todo")}>Move To Todo</button>
+            }
+
+            {/* Edit task modal */}
+            <div
+               className={
+                  editForm.id === task.id
+                     ? "block mt-3 rounded-md border border-border bg-surface-low p-4 space-y-3"
+                     : "hidden"
                }
-            <div className={editingTaskId === task.id ? "block" : "hidden"}>
-               <span>Edit task</span>
-               <input type="text" value={editingTittle} onChange={(e) => setEditingTittle(e.target.value)} />
-               <button onClick={() => {
-                  editTask(task.id, editingTittle)
-                  setEditingTaskId(null)
-               }}>Confirm</button>
+            >
+               <span className="block text-text-secondary text-sm">
+                  Edit task
+               </span>
+
+               {/* Title */}
+               <input
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-text-primary outline-none focus:border-primary"
+                  value={editForm.title}
+                  onChange={(e) =>
+                     setEditForm((prev) => ({
+                     ...prev,
+                     title: e.target.value,
+                     }))
+                  }
+                  placeholder="Title"
+               />
+
+               {/* Description */}
+               <input
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-text-primary outline-none focus:border-primary"
+                  value={editForm.description}
+                  onChange={(e) =>
+                     setEditForm((prev) => ({
+                     ...prev,
+                     description: e.target.value,
+                     }))
+                  }
+                  placeholder="Description"
+               />
+
+               {/* Priority */}
+               <select
+                  value={editForm.priority}
+                  onChange={(e) =>
+                     setEditForm((prev) => ({
+                     ...prev,
+                     priority: e.target.value as "low" | "medium" | "high",
+                     }))
+                  }
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-text-primary outline-none focus:border-primary"
+               >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+               </select>
+
+               {/* Due Date */}
+               <input
+                  type="date"
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-text-primary outline-none focus:border-primary"
+                  value={editForm.dueDate}
+                  onChange={(e) =>
+                     setEditForm((prev) => ({
+                     ...prev,
+                     dueDate: e.target.value,
+                     }))
+                  }
+               />
+
+               <div className="flex gap-2 pt-2">
+                  <button
+                     onClick={() =>
+                     editTask(
+                        task.id,
+                        editForm.title,
+                        editForm.description,
+                        editForm.priority,
+                        editForm.dueDate
+                     )
+                     }
+                     className="px-3 py-2 rounded-md bg-primary text-text-primary text-sm hover:opacity-90 transition"
+                  >
+                     Confirm
+                  </button>
+
+                  <button
+                     onClick={() =>
+                     setEditForm({
+                        ...editForm,
+                        id: "",
+                     })
+                     }
+                     className="px-3 py-2 rounded-md border border-border text-text-secondary text-sm hover:bg-hover-bg transition"
+                  >
+                     Cancel
+                  </button>
+               </div>
             </div>
          </div>
       </article>

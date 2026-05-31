@@ -8,10 +8,13 @@ export interface Board {
 
 // Task model
 export interface Task {
-   id: string
-   title: string
-   status: "todo" | "done"
-   boardId: string
+   id: string;
+   title: string;
+   description: string;
+   priority: "low" | "medium" | "high";
+   dueDate: string | null;
+   status: "todo" | "done";
+   boardId: string;
 }
 
 // App state shape

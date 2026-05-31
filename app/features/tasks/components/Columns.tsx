@@ -25,7 +25,7 @@ export default function Column({boardId}: {boardId: string}) {
                {todoTasks.length >= 1 ? 
                todoTasks.map((t) => (
                   <div key={t.id}>
-                     <TaskCard title={t.title} id={t.id} status={t.status} boardId={t.boardId} />
+                     <TaskCard task={t} />
                   </div>
                )): (
                   <div className="emptyColumn">
@@ -52,7 +52,7 @@ export default function Column({boardId}: {boardId: string}) {
                {doneTasks.length >= 1 ? 
                doneTasks.map((t) => (
                   <div key={t.id}>
-                     <TaskCard title={t.title} id={t.id} status={t.status} boardId={t.boardId} />
+                     <TaskCard task={t}/>
                   </div>
                )): (
                   <div className="emptyColumn text-center">

@@ -21,6 +21,9 @@ export function reducer(state: AppState, action: Actions) {
             tasks: [...state.tasks, {
                id: crypto.randomUUID(),
                title: action.payload.title,
+               description: action.payload.description,
+               priority: action.payload.priority,
+               dueDate: action.payload.dueDate,
                status: action.payload.status ?? "todo",
                boardId: action.payload.boardId
             }]
