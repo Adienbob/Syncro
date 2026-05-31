@@ -13,7 +13,7 @@ export interface Task {
    description: string;
    priority: "low" | "medium" | "high";
    dueDate: string | null;
-   status: "todo" | "done";
+   status: "todo" | "in-progress" | "done",
    boardId: string;
 }
 

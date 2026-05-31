@@ -79,12 +79,19 @@ export default function TaskCard({task}: {task: Task}) {
             </div>
 
             {/* Move task */}
-            {
-               task.status === "todo" ? 
-               <button onClick={() => moveTask(task.id, "done")}>Move To Done</button>
-               :
-               <button onClick={() => moveTask(task.id, "todo")}>Move To Todo</button>
-            }
+            <select
+               value={task.status}
+               onChange={(e) =>
+                  moveTask(
+                     task.id,
+                     e.target.value as "todo" | "in-progress" | "done"
+                  )
+               }
+            >
+               <option value="todo">Todo</option>
+               <option value="in-progress">In Progress</option>
+               <option value="done">Done</option>
+            </select>
 
             {/* Edit task modal */}
             <div

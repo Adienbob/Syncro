@@ -5,7 +5,7 @@ interface UseTasksReturn  {
    addTask: (title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null, boardId: string ) => void
    deleteTask: (id: string) => void
    editTask: (id: string, title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null ) => void
-   moveTask: (id: string, newStatus?: "todo" | "done", newBoardId?: string) => void
+   moveTask: (id: string, newStatus?: "todo" | "in-progress" | "done", newBoardId?: string) => void
 }
 
 export function useTasks(boardId: string): UseTasksReturn {
@@ -24,7 +24,7 @@ export function useTasks(boardId: string): UseTasksReturn {
       dispatch({type: "EDIT_TASK", payload: {id, title, description, priority, dueDate }})
    }
 
-   function moveTask(id: string, newStatus?: "todo" | "done", newBoardId?: string) {
+   function moveTask(id: string, newStatus?: "todo" | "in-progress" | "done", newBoardId?: string) {
       if (!newStatus && !newBoardId) {
          throw new Error("Choose at least one option")
       }
