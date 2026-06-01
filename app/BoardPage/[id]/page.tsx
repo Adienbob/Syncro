@@ -3,7 +3,7 @@ import { use, useEffect } from "react";
 import { useAppContext } from "@/app/state/AppContext";
 import { useRouter } from "next/navigation";
 import AddTaskModal from "@/app/features/tasks/components/AddTaskModal";
-import Column from "@/app/features/tasks/components/Columns";
+import Columns from "@/app/features/tasks/components/Columns";
 import { useBoards } from "@/app/features/boards/hooks/useBoards";
 
 export default function BoardPage({ params }: { params: Promise<{ id: string }> }) {
@@ -32,7 +32,7 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
             </div>
             <AddTaskModal id={id} />
          </div>
-         <Column boardId={id} />
+         <Columns boardId={id} />
       </div>
    )
 }

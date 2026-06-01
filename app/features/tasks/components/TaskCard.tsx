@@ -1,9 +1,13 @@
+"use client"
 import { useTasks } from "../hooks/useTasks"
 import { useState } from "react"
 import { Task } from "@/app/types/models"
+import { useDraggable } from "@dnd-kit/core"
 
-export default function TaskCard({task}: {task: Task}) {
+export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean}) {
    const { deleteTask, editTask, moveTask} = useTasks(task.boardId)
+   const { setNodeRef, listeners, attributes } = useDraggable({id: task.id})
+
 
    // Editing task
    const [editForm, setEditForm] = useState({
@@ -18,7 +22,7 @@ export default function TaskCard({task}: {task: Task}) {
    const [movingTaskId, setMovingTaskId] = useState<string | null>(null)
    const [newBoardId, setNewBoardId] = useState("")
    return (
-      <article className="bg-surface-low p-4 border border-border rounded-[8px] grid gap-2">
+      <article ref={setNodeRef} {...listeners} {...attributes} className={`${overlay ? "shadow-xl scale-105 opacity-90 rotate-1" : ""} bg-surface-low p-4 border border-border rounded-[8px] grid gap-2`}>
          <div className="flex justify-between items-center">
             <span className="px-2 py-0.5 rounded-[4px] text-primary-light bg-primary-light/10 leading-[14px] tracking-[0.55px] text-[11px] font-medium">{task.status.toLowerCase()}</span>
             <div className="flex gap-4 items-center">
