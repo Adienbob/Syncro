@@ -5,14 +5,15 @@ import { DndContext, DragOverlay } from "@dnd-kit/core"
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core"
 import { useState } from "react"
 import TaskCard from "./TaskCard"
+import { Task } from "@/app/types/models";
 
 
-export default function Columns({boardId}: {boardId: string}) {
-   const { tasks, moveTask } = useTasks(boardId)
+export default function Columns({boardId, filteredTasks}: {boardId: string, filteredTasks: Task[]}) {
+   const { moveTask } = useTasks(boardId)
    // Filters Todo, in-progress and Done Tasks
-   const todoTasks = tasks.filter(t => t.status === "todo")
-   const inProgressTasks = tasks.filter(t => t.status === "in-progress")
-   const doneTasks = tasks.filter(t => t.status === "done")
+   const todoTasks = filteredTasks.filter(t => t.status === "todo")
+   const inProgressTasks = filteredTasks.filter(t => t.status === "in-progress")
+   const doneTasks = filteredTasks.filter(t => t.status === "done")
 
    const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
 
@@ -20,7 +21,7 @@ export default function Columns({boardId}: {boardId: string}) {
       setActiveTaskId(String(event.active.id));
    }
 
-   const activeTask = tasks.find(t => t.id === activeTaskId);
+   const activeTask = filteredTasks.find(t => t.id === activeTaskId);
 
    function handleDragEnd(event: DragEndEvent) {
       const { active, over } = event

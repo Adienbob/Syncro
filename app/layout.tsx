@@ -20,7 +20,6 @@ export default function RootLayout({
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         <main className="bg-input-bg min-h-screen">
-          <Header />
           <AppProvider>
             {children}
           </AppProvider>

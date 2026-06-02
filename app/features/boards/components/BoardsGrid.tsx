@@ -1,8 +1,9 @@
 import { useBoards } from "../hooks/useBoards"
 import Link from "next/link"
 import BoardCard from "./boardCard";
-export default function BoardsGrid() {
-   const { boards } = useBoards()   
+import { Board } from "@/app/types/models";
+
+export default function BoardsGrid({boards}: {boards: Board[]}) {
    
    return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
