@@ -9,6 +9,15 @@ export function reducer(state: AppState, action: Actions) {
             ...state,
             boards: [...state.boards, {id: crypto.randomUUID(), title: action.payload.title, createdAt: new Date().toISOString()}]
          }
+      case "RENAME_BOARD": 
+         return {
+            ...state,
+            boards: state.boards.map((b) => (
+               b.id === action.payload.id
+               ? {...b, title: action.payload.title}
+               : b
+            ))
+         }
       case "DELETE_BOARD":
          return {
             ...state,

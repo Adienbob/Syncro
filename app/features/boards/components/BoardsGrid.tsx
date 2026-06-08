@@ -1,5 +1,3 @@
-import { useBoards } from "../hooks/useBoards"
-import Link from "next/link"
 import BoardCard from "./boardCard";
 import { Board } from "@/app/types/models";
 
@@ -8,9 +6,7 @@ export default function BoardsGrid({boards}: {boards: Board[]}) {
    return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
          {boards.length > 0 ? boards.map( b => (
-            <Link key={b.id} href={`/BoardPage/${b.id}`}>
-               <BoardCard title={b.title} id={b.id} createdAt={b.createdAt} />
-            </Link>
+            <BoardCard key={b.id} title={b.title} id={b.id} createdAt={b.createdAt} />
          ))
       : "No boards yet, Create one!"}
       </div>

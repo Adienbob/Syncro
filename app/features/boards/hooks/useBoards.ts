@@ -4,6 +4,7 @@ import { Board } from "@/app/types/models";
 interface UseBoardsReturn  {
    boards: Board[];
    addBoard: (title: string) => void
+   renameBoard: (id:string, title: string) => void
    deleteBoard: (id: string) => void
 }
 
@@ -15,9 +16,13 @@ export function useBoards(): UseBoardsReturn {
       dispatch({ type: "ADD_BOARD", payload: {title} })
    }
 
+   function renameBoard(id:string, title: string) {
+      dispatch({ type: "RENAME_BOARD", payload: {id, title}})
+   }
+
    function deleteBoard(id: string) {
       dispatch({ type: "DELETE_BOARD", payload: {id}})
    }
 
-   return { boards, addBoard, deleteBoard}
+   return { boards, addBoard, renameBoard, deleteBoard}
 }

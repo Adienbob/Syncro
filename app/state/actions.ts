@@ -1,5 +1,6 @@
 export type Actions = 
-   | { type: "ADD_BOARD", payload: {title: string,} }
+   | { type: "ADD_BOARD", payload: {title: string,}}
+   | { type: "RENAME_BOARD", payload: {id: string, title: string}}
    | { type: "DELETE_BOARD", payload: {id: string}}
    | { type: "ADD_TASK", payload: { title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null, status?: "todo" | "in-progress" | "done", boardId: string}}
    | { type: "DELETE_TASK", payload: {id: string}}
