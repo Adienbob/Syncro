@@ -30,6 +30,7 @@ export function reducer(state: AppState, action: Actions) {
             tasks: [...state.tasks, {
                id: crypto.randomUUID(),
                title: action.payload.title,
+               createdAt: new Date().toISOString(),
                description: action.payload.description,
                priority: action.payload.priority,
                dueDate: action.payload.dueDate,

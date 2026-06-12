@@ -20,12 +20,33 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
       }
    }, [state.boards, id, router]);
    
+   // Search 
    const [searchTerm, setSearchTerm] = useState("");
    const { tasks } = useTasks(id);
 
-   const filteredTasks = tasks.filter((task) =>
+   // Sort
+   const [sortBy, setSortBy] = useState<"A-Z" | "Z-A" | "newest" | "oldest" | "default">("default");
+   const filteredTasks = [...tasks]
+   .filter((task) =>
       task.title.toLowerCase().includes(searchTerm.toLowerCase())
-   );
+   ).sort((a, b) => {
+      switch (sortBy) {
+         case "A-Z":
+               return a.title.localeCompare(b.title)
+
+         case "Z-A":
+               return b.title.localeCompare(a.title)
+
+         case "newest":
+            return (new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            
+         case "oldest":
+            return (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+
+         default:
+            return 0;
+      }
+   })
    return (
       <div className="">
          <Header 
@@ -44,6 +65,19 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
                   <h1 className="text-primary-light text-[20px] leading-[28px] font-bold">{currentBoard?.title}</h1>
                </div>
                <AddTaskModal id={id} />
+            </div>
+            <div>
+               <select
+                  value={sortBy}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as "A-Z" | "Z-A" | "newest" | "oldest" | "default")}
+                  className="px-3 py-2 rounded border border-border bg-surface text-text"
+               >
+                  <option value="default">Default</option>
+                  <option value="A-Z">A-Z</option>
+                  <option value="Z-A">Z-A</option>
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
+               </select>
             </div>
             <Columns filteredTasks={filteredTasks} boardId={id} />
          </div>

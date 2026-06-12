@@ -10,6 +10,7 @@ export interface Board {
 export interface Task {
    id: string;
    title: string;
+   createdAt: string;
    description: string;
    priority: "low" | "medium" | "high";
    dueDate: string | null;
