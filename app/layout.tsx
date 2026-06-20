@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AppProvider } from "./state/AppContext";
-import Header from "./shared/ui/Header";
+import {ClerkProvider} from "@clerk/nextjs"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,17 +14,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`h-full antialiased`}
-    >
-      <body suppressHydrationWarning className="min-h-full flex flex-col">
-        <main className="bg-input-bg min-h-screen">
-          <AppProvider>
-            {children}
-          </AppProvider>
-        </main>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang="en"
+        className={`h-full antialiased`}
+      >
+        <body suppressHydrationWarning className="min-h-full flex flex-col">
+          <main className="bg-input-bg min-h-screen">
+            <AppProvider>
+              {children}
+            </AppProvider>
+          </main>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
