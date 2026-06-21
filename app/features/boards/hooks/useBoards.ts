@@ -1,5 +1,7 @@
 import { useAppContext } from "@/app/state/AppContext";
 import { Board } from "@/app/types/models";
+import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs"
 
 interface UseBoardsReturn  {
    boards: Board[];
@@ -12,15 +14,32 @@ export function useBoards(): UseBoardsReturn {
    const {state, dispatch} = useAppContext()
    const boards = state.boards
 
+   // Auth | Protect Actions
+   const router = useRouter()
+   const { isSignedIn } = useUser()
+
+
    function addBoard(title: string) {
+      if (!isSignedIn) {
+         router.push("/sign-in");
+         return;
+      }
       dispatch({ type: "ADD_BOARD", payload: {title} })
    }
 
    function renameBoard(id:string, title: string) {
+      if (!isSignedIn) {
+         router.push("/sign-in");
+         return;
+      }
       dispatch({ type: "RENAME_BOARD", payload: {id, title}})
    }
 
    function deleteBoard(id: string) {
+      if (!isSignedIn) {
+         router.push("/sign-in");
+         return;
+      }
       dispatch({ type: "DELETE_BOARD", payload: {id}})
    }
 
