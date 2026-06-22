@@ -20,14 +20,13 @@ export default function Column({tasks, name}: {tasks:  Task[], name: string}) {
             </button>
          </div>
          <div className="p-4 grid gap-4">
-            {tasks.length >= 1 ? 
+            {tasks.length > 0 ? 
             tasks.map((t) => (
                <div key={t.id}>
                   <TaskCard task={t} />
                </div>
             )): (
                <div className="emptyColumn">
-                  <span>IAMGE</span>
                   <span>No tasks ToDo yet</span>
                   <p>
                      ToDo tasks will appear here.

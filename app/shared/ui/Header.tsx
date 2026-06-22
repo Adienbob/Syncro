@@ -7,7 +7,6 @@ export type HeaderProps = {
 };
 export default function Header({searchTerm, onSearchChange}: HeaderProps) {
    const { isSignedIn, user } = useUser();
-   console.log(user)
    return (
       <header className="text-white bg-background border-border border-b px-6 py-4.5 flex justify-between">
          <div className="flex gap-4 items-center">
