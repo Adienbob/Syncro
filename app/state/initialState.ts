@@ -3,7 +3,7 @@ import { AppState } from "../types/models"
 
 const defaultState: AppState = {
    boards: [{
-      id: "syncro-1",
+      id: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
       title: "Syncro - Development Workspace",
       createdAt: "2026-01-01"
    }],
@@ -16,7 +16,7 @@ const defaultState: AppState = {
          status: "done",
          createdAt: "2026-06-20",
          dueDate: null,
-         boardId: "syncro-1"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
       },
       {
          id: "task-2",
@@ -26,7 +26,7 @@ const defaultState: AppState = {
          status: "in-progress",
          createdAt: "2026-06-21",
          dueDate: null,
-         boardId: "syncro-1"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
       },
       {
          id: "task-3",
@@ -36,7 +36,7 @@ const defaultState: AppState = {
          status: "todo",
          createdAt: "2026-06-21",
          dueDate: null,
-         boardId: "syncro-1"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
       },
       {
          id: "task-4",
@@ -46,7 +46,7 @@ const defaultState: AppState = {
          status: "todo",
          createdAt: "2026-06-21",
          dueDate: null,
-         boardId: "syncro-1"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
       },
       {
          id: "task-5",
@@ -56,7 +56,7 @@ const defaultState: AppState = {
          status: "todo",
          createdAt: "2026-06-21",
          dueDate: null,
-         boardId: "syncro-1"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
       },
       {
          id: "task-6",
@@ -66,7 +66,7 @@ const defaultState: AppState = {
          status: "todo",
          createdAt: "2026-06-21",
          dueDate: null,
-         boardId: "syncro-1"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
       }
    ]
 }

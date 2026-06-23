@@ -27,19 +27,34 @@ export function useBoards(): UseBoardsReturn {
       dispatch({ type: "ADD_BOARD", payload: {title} })
    }
 
-   function renameBoard(id:string, title: string) {
+   async function renameBoard(id:string, title: string) {
       if (!isSignedIn) {
          router.push("/sign-in");
          return;
       }
+      console.log(id)
+      console.log(title)
+      await fetch(`/api/boards/${id}`, {
+         method: "PATCH",
+         headers: {
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify({ title }),
+      });
+
       dispatch({ type: "RENAME_BOARD", payload: {id, title}})
    }
 
-   function deleteBoard(id: string) {
+   async function deleteBoard(id: string) {
       if (!isSignedIn) {
          router.push("/sign-in");
          return;
       }
+
+      await fetch(`/api/boards/${id}`, {
+         method: "DELETE",
+      }) ;
+
       dispatch({ type: "DELETE_BOARD", payload: {id}})
    }
 
