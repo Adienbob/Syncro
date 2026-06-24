@@ -4,10 +4,15 @@ import { Actions } from "./actions"
 
 export function reducer(state: AppState, action: Actions) {
    switch (action.type) {
+      case "SET_BOARDS":
+         return {
+            ...state,
+            boards: action.payload.boards
+         }
       case "ADD_BOARD":
          return {
             ...state,
-            boards: [...state.boards, {id: crypto.randomUUID(), title: action.payload.title, createdAt: new Date().toISOString()}]
+            boards: [...state.boards, {id: action.payload.id, title: action.payload.title, createdAt: new Date().toISOString()}]
          }
       case "RENAME_BOARD": 
          return {

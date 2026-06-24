@@ -1,6 +1,6 @@
 "use client"
 import { ReactNode, createContext, useReducer, useContext, useEffect, useState } from 'react';
-import { defaultState, getInitialState } from './initialState';
+import { defaultState } from './initialState';
 import { reducer } from './reducer';
 import { Actions } from './actions';
 
@@ -16,19 +16,24 @@ type Props = {
 }
 
 export const AppProvider = ({ children }: Props) => {
-   const [state, dispatch] = useReducer(reducer, undefined, getInitialState);
+   const [state, dispatch] = useReducer(reducer, defaultState);
    const [isHydrated, setIsHydrated] = useState(false)
-   
+   const [isLoading, setIsLoading] = useState(true)
    useEffect(() => {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsHydrated(true)
-      localStorage.setItem("syncro-data", JSON.stringify(state))
-   }, [state])
+      async function loadBoards() {
+         const res = await fetch("/api/boards");
+         const boards = await res.json() 
+         dispatch({type: "SET_BOARDS", payload: {boards}})
+         setIsLoading(false)
+         setIsHydrated(true)
+      }
 
+      loadBoards()
+   }, [])
 
-
-   if (!isHydrated) return null
-
+   if (!isHydrated || isLoading) {
+      return <div>Loading....</div>
+   }
    return (
       <AppContext.Provider value={{ state, dispatch }}>
          {children}

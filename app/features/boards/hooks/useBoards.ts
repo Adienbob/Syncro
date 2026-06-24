@@ -13,7 +13,6 @@ interface UseBoardsReturn  {
 export function useBoards(): UseBoardsReturn {
    const {state, dispatch} = useAppContext()
    const boards = state.boards
-
    // Auth | Protect Actions
    const router = useRouter()
    const { isSignedIn } = useUser()
@@ -25,7 +24,7 @@ export function useBoards(): UseBoardsReturn {
          return;
       }
 
-      await fetch(`/api/boards`, {
+      const res = await fetch(`/api/boards`, {
          method: "POST",
          headers: {
             "Content-Type": "application/json",
@@ -33,7 +32,9 @@ export function useBoards(): UseBoardsReturn {
          body: JSON.stringify({ title }),
       });
 
-      dispatch({ type: "ADD_BOARD", payload: {title} })
+      const newBoard: {id: string, title: string} = await res.json()
+
+      dispatch({ type: "ADD_BOARD", payload: {id: newBoard.id, title: newBoard.title } })
    }
 
    async function renameBoard(id:string, title: string) {
@@ -58,8 +59,8 @@ export function useBoards(): UseBoardsReturn {
          router.push("/sign-in");
          return;
       }
-      console.log(id)
-      await fetch(`/api/boards/${`d79b3ec3-0e0e-4661-a973-4bf0424681a7`}`, {
+
+      await fetch(`/api/boards/${id}`, {
          method: "DELETE",
       }) ;
 

@@ -2,9 +2,9 @@ import { supabase } from "@/app/shared/services/supabase";
 
 export async function DELETE(
    req: Request,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
    ) {
-   const { id } = params;
+   const { id } = await params;
 
    const { error } = await supabase
       .from("boards")
@@ -27,8 +27,6 @@ export async function PATCH(
    const body = await req.json();
    
    const { title } = body;
-   console.log(id)
-   console.log(title)
    const { error } = await supabase
       .from("boards")
       .update({ title })

@@ -35,8 +35,6 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
    
    .filter((task) => {
       if (priorityFilter === "all") return true;
-      console.log(task.priority)
-      console.log(priorityFilter)
       return task.priority === priorityFilter;
    })
    

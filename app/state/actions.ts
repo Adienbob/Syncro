@@ -1,5 +1,7 @@
+import { Board } from "../types/models"
 export type Actions = 
-   | { type: "ADD_BOARD", payload: { title: string,}}
+   | { type: "SET_BOARDS", payload: { boards: Board[] }}
+   | { type: "ADD_BOARD", payload: { id: string, title: string,}}
    | { type: "RENAME_BOARD", payload: {id: string, title: string}}
    | { type: "DELETE_BOARD", payload: {id: string}}
    | { type: "ADD_TASK", payload: { title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null, status?: "todo" | "in-progress" | "done", boardId: string}}
