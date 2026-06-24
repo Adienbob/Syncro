@@ -2,27 +2,40 @@ import { supabase } from "@/app/shared/services/supabase";
 
 
 export async function GET() {
-   const { data, error } = await supabase
-      .from("boards")
-      .select("*");
+    const { data, error } = await supabase
+        .from("boards")
+        .select("*");
 
-   if (error) {
-      return Response.json(
-         { error: error.message },
-         { status: 500 }
-      );
-   }
+    if (error) {
+        return Response.json(
+          { error: error.message },
+          { status: 500 }
+        );
+    }
 
-   return Response.json(data);
+    return Response.json(data);
 }
 
-export async function POST(request: Request) {
-   const body = await request.json();
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    console.log("BODY:", body);
 
-   console.log(body);
+    const { title } = body;
 
-   return Response.json({
-      success: true,
-      received: body,
-   });
+    const { data, error } = await supabase
+      .from("boards")
+      .insert([{ title }])
+      .select()
+      .single();
+
+    if (error) {
+      return Response.json({ error: error.message }, { status: 500 });
+    }
+
+    return Response.json(data);
+  } catch (err) {
+    console.log("CATCH ERROR:", err);
+    return Response.json({ error: "Server crashed" }, { status: 500 });
+  }
 }

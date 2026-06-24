@@ -10,7 +10,6 @@ import Link from "next/link";
 export default function BoardCard(board: Board) {
    const { deleteBoard } = useBoards()
    const [isRenameOpen, setIsRenameOpen] = useState(false)
-
    return (
       <article className="p-4 bg-surface border border-border rounded-[8px] ">
          <div className="">
