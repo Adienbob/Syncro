@@ -159,7 +159,7 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
                      editForm.priority,
                      editForm.dueDate
                   )
-
+                  setIsOpen(false)
                   }}
                   className="px-3 py-2 rounded-md bg-primary text-text-primary text-sm hover:opacity-90 transition"
                >

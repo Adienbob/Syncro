@@ -19,27 +19,51 @@ export function useTasks(boardId: string): UseTasksReturn {
    const { isSignedIn } = useUser()
    const router = useRouter()
 
-   function addTask(title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null, boardId: string) {
+   async function addTask(title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null, boardId: string) {
       if (!isSignedIn) {
          router.push("/sign-in");
          return;
       }
-      dispatch({type: "ADD_TASK", payload: {title, description, priority, dueDate, boardId}})
+
+      const res = await fetch(`/api/tasks`, {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify({ title, description, priority, dueDate, boardId }),
+      });
+
+         const newTask: {id: string, created_at: string} = await res.json()
+      dispatch({type: "ADD_TASK", payload: {id: newTask.id, title, createdAt: newTask.created_at, description, priority, dueDate, boardId}})
    }
 
-   function deleteTask(id: string) {
+   async function deleteTask(id: string) {
       if (!isSignedIn) {
          router.push("/sign-in");
          return;
       }
+
+      await fetch(`/api/tasks/${id}`, {
+         method: "DELETE",
+      }) ;
+
       dispatch({type: "DELETE_TASK", payload: {id}})
    }
 
-   function editTask(id: string, title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null ) {
+   async function editTask(id: string, title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null ) {
       if (!isSignedIn) {
          router.push("/sign-in");
          return;
       }
+
+      await fetch(`/api/tasks/${id}`, {
+         method: "PATCH",
+         headers: {
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify({ title, description, priority, due_date: dueDate }),
+      });
+
       dispatch({type: "EDIT_TASK", payload: {id, title, description, priority, dueDate }})
    }
 
