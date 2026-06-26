@@ -5,12 +5,10 @@ export default function AddTaskModal({ id }: { id: string }) {
    const { addTask } = useTasks(id);
 
    const [addingTask, setAddingTask] = useState(false);
-   console.log(id)
    const [title, setTitle] = useState("");
    const [description, setDescription] = useState("");
    const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
    const [dueDate, setDueDate] = useState<string | null>(null);
-
    const handleAddTask = () => {
       if (!title.trim()) return;
 

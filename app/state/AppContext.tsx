@@ -20,15 +20,31 @@ export const AppProvider = ({ children }: Props) => {
    const [isHydrated, setIsHydrated] = useState(false)
    const [isLoading, setIsLoading] = useState(true)
    useEffect(() => {
-      async function loadBoards() {
-         const res = await fetch("/api/boards");
-         const boards = await res.json() 
+      async function loadData() {
+         const [boardsRes, tasksRes] = await Promise.all([
+            fetch("/api/boards"),
+            fetch("/api/tasks"),
+         ])
+         const boards = await boardsRes.json() 
+         const tasks = await tasksRes.json() 
+         
+         const normalizedTasks = tasks.map((task: {board_id: string, created_at: string, due_date: string}) => ({
+            ...task,
+            boardId: task.board_id,
+            createdAt: task.created_at,
+            dueDate: task.due_date,
+         }));
+
+         console.log(normalizedTasks.id)
+         console.log(normalizedTasks)
+         
          dispatch({type: "SET_BOARDS", payload: {boards}})
+         dispatch({type: "SET_TASKS", payload: {tasks: normalizedTasks}})
          setIsLoading(false)
          setIsHydrated(true)
       }
 
-      loadBoards()
+      loadData()
    }, [])
 
    if (!isHydrated || isLoading) {

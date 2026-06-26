@@ -1,10 +1,11 @@
-import { Board } from "../types/models"
+import { Board, Task } from "../types/models"
 export type Actions = 
    | { type: "SET_BOARDS", payload: { boards: Board[] }}
    | { type: "ADD_BOARD", payload: { id: string, title: string,}}
    | { type: "RENAME_BOARD", payload: {id: string, title: string}}
    | { type: "DELETE_BOARD", payload: {id: string}}
+   | { type: "SET_TASKS", payload: { tasks: Task[] }}
    | { type: "ADD_TASK", payload: { id: string, title: string, createdAt: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null, status?: "todo" | "in-progress" | "done", boardId: string}}
    | { type: "DELETE_TASK", payload: {id: string}}
-   | { type: "MOVE_TASK", payload: {id: string, newStatus?: "todo" | "in-progress" | "done", newBoardId?: string}}
+   | { type: "MOVE_TASK", payload: {id: string, newStatus: "todo" | "in-progress" | "done", newBoardId?: string}}
    | { type: "EDIT_TASK", payload: {id: string, title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null}}

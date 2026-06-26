@@ -23,39 +23,40 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
    // Search 
    const [searchTerm, setSearchTerm] = useState("");
    const { tasks } = useTasks(id);
-
    // Sort
    const [sortBy, setSortBy] = useState<"A-Z" | "Z-A" | "newest" | "oldest" | "default">("default");
    const [priorityFilter, setPriorityFilter] =useState<"all" | "high" | "medium" | "low">("all");
-
+   
    const filteredTasks = [...tasks]
    .filter((task) =>
       task.title.toLowerCase().includes(searchTerm.toLowerCase())
-   )
-   
-   .filter((task) => {
-      if (priorityFilter === "all") return true;
-      return task.priority === priorityFilter;
-   })
-   
-   .sort((a, b) => {
-      switch (sortBy) {
-         case "A-Z":
-               return a.title.localeCompare(b.title)
+)
 
+.filter((task) => {
+   if (priorityFilter === "all") return true;
+   return task.priority === priorityFilter;
+})
+
+.sort((a, b) => {
+   switch (sortBy) {
+      case "A-Z":
+         return a.title.localeCompare(b.title)
+         
          case "Z-A":
-               return b.title.localeCompare(a.title)
-
-         case "newest":
-            return (new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            return b.title.localeCompare(a.title)
             
-         case "oldest":
-            return (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-
-         default:
-            return 0;
+            case "newest":
+               return (new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+               
+               case "oldest":
+                  return (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+                  
+                  default:
+                     return 0;
       }
    })
+
+   console.log(filteredTasks)
    return (
       <div className="">
          <Header 

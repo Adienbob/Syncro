@@ -74,7 +74,7 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
             <p className="text-sm leading-5 text-on-surface-variant">{task.description}</p>
             
             {/* Move to another board */}
-            <div className="flex justify-between">
+            {/* <div className="flex justify-between">
                <button onClick={() => setMovingTaskId(task.id)}>Move To Another Board</button>
                <div className={movingTaskId === task.id ? "block" : "hidden"}>
                   <span>New Board Id</span>
@@ -86,7 +86,7 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
                   }}>Confirm</button>
                </div>
 
-            </div>
+            </div> */}
          </div>
          {/* Edit task modal */}
          <div className={editForm.id === task.id ? "mt-3 rounded-md border border-border bg-surface-low p-4 space-y-3 z-40" : "hidden" }>

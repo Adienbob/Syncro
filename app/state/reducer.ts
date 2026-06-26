@@ -9,8 +9,8 @@ export function reducer(state: AppState, action: Actions) {
             ...state,
             boards: action.payload.boards
          }
-      case "ADD_BOARD":
-         return {
+         case "ADD_BOARD":
+            return {
             ...state,
             boards: [...state.boards, {id: action.payload.id, title: action.payload.title, createdAt: new Date().toISOString()}]
          }
@@ -29,6 +29,11 @@ export function reducer(state: AppState, action: Actions) {
             boards: state.boards.filter( b => b.id !== action.payload.id ),
             tasks: state.tasks.filter(t => t.boardId !== action.payload.id )
          }
+         case "SET_TASKS":
+            return {
+               ...state,
+               tasks: action.payload.tasks
+            }
       case "ADD_TASK": 
          return {
             ...state,
@@ -72,7 +77,7 @@ export function reducer(state: AppState, action: Actions) {
             ...state,
                tasks: state.tasks.map((t) => (
                   t.id === action.payload.id
-                  ? {...t, title: action.payload.title}
+                  ? {...t, title: action.payload.title, description: action.payload.description}
                   : t
                ))
          }
