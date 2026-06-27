@@ -1,8 +1,9 @@
 "use client"
 import { ReactNode, createContext, useReducer, useContext, useEffect, useState } from 'react';
-import { defaultState } from './initialState';
+import { defaultState, demoState } from './initialState';
 import { reducer } from './reducer';
 import { Actions } from './actions';
+import { useUser } from '@clerk/nextjs';
 
 type ContextType = {
    state: typeof defaultState
@@ -19,6 +20,8 @@ export const AppProvider = ({ children }: Props) => {
    const [state, dispatch] = useReducer(reducer, defaultState);
    const [isHydrated, setIsHydrated] = useState(false)
    const [isLoading, setIsLoading] = useState(true)
+   const {isSignedIn} = useUser()
+
    useEffect(() => {
       async function loadData() {
          const [boardsRes, tasksRes] = await Promise.all([
@@ -27,7 +30,13 @@ export const AppProvider = ({ children }: Props) => {
          ])
          const boards = await boardsRes.json() 
          const tasks = await tasksRes.json() 
-         
+
+         const normalizedBoards = boards.map((board: {user_id: string, created_at: string}) => ({
+            ...board,
+            userId: board.user_id,
+            createdAt: board.created_at,
+         }));
+
          const normalizedTasks = tasks.map((task: {board_id: string, created_at: string, due_date: string}) => ({
             ...task,
             boardId: task.board_id,
@@ -35,17 +44,23 @@ export const AppProvider = ({ children }: Props) => {
             dueDate: task.due_date,
          }));
 
-         console.log(normalizedTasks.id)
-         console.log(normalizedTasks)
          
-         dispatch({type: "SET_BOARDS", payload: {boards}})
+         dispatch({type: "SET_BOARDS", payload: {boards: normalizedBoards}})
          dispatch({type: "SET_TASKS", payload: {tasks: normalizedTasks}})
          setIsLoading(false)
          setIsHydrated(true)
       }
 
-      loadData()
-   }, [])
+
+
+      if (!isSignedIn) {
+         loadData()
+      } {
+         dispatch({type: "SET_BOARDS", payload: {boards: demoState.boards}})
+         dispatch({type: "SET_TASKS", payload: {tasks: demoState.tasks}})
+      }
+
+   }, [isSignedIn])
 
    if (!isHydrated || isLoading) {
       return <div>Loading....</div>

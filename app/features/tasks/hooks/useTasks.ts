@@ -14,7 +14,7 @@ interface UseTasksReturn  {
 export function useTasks(boardId: string): UseTasksReturn {
    const {state, dispatch} = useAppContext()
    const tasks = state.tasks.filter((t) => t.boardId === boardId)
-   
+
    // Auth | Protect Actions
    const { isSignedIn } = useUser()
    const router = useRouter()
@@ -31,9 +31,7 @@ export function useTasks(boardId: string): UseTasksReturn {
          },
          body: JSON.stringify({ title, description, priority, dueDate, board_Id: boardId }),
       });
-      console.log()
       const newTask: {id: string, created_at: string} = await res.json()
-      console.log(newTask.id)
       dispatch({type: "ADD_TASK", payload: {id: newTask.id, title, createdAt: newTask.created_at, description, priority, dueDate, boardId}})
    }
 

@@ -12,7 +12,7 @@ export function reducer(state: AppState, action: Actions) {
          case "ADD_BOARD":
             return {
             ...state,
-            boards: [...state.boards, {id: action.payload.id, title: action.payload.title, createdAt: new Date().toISOString()}]
+            boards: [...state.boards, {id: action.payload.id, title: action.payload.title, createdAt: action.payload.createdAt}]
          }
       case "RENAME_BOARD": 
          return {

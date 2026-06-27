@@ -15,26 +15,25 @@ export function useBoards(): UseBoardsReturn {
    const boards = state.boards
    // Auth | Protect Actions
    const router = useRouter()
-   const { isSignedIn } = useUser()
-
-
+   const { isSignedIn, user } = useUser()
+   
+   
    async function addBoard(title: string) {
       if (!isSignedIn) {
          router.push("/sign-in");
          return;
       }
-
       const res = await fetch(`/api/boards`, {
          method: "POST",
          headers: {
             "Content-Type": "application/json",
          },
-         body: JSON.stringify({ title }),
+         body: JSON.stringify({ title, user_id: user.id }),
       });
 
-      const newBoard: {id: string, title: string} = await res.json()
+      const newBoard: {id: string, user_id: string, created_at: string} = await res.json()
 
-      dispatch({ type: "ADD_BOARD", payload: {id: newBoard.id, title: newBoard.title } })
+      dispatch({ type: "ADD_BOARD", payload: {id: newBoard.id, title, userId: newBoard.user_id, createdAt: newBoard.created_at } })
    }
 
    async function renameBoard(id:string, title: string) {

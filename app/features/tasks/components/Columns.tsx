@@ -22,7 +22,6 @@ export default function Columns({boardId, filteredTasks}: {boardId: string, filt
    }
 
    const activeTask = filteredTasks.find(t => t.id === activeTaskId);
-   console.log(filteredTasks[0].id)
    function handleDragEnd(event: DragEndEvent) {
       const { active, over } = event
       if (!over) return;
