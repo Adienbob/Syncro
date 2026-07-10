@@ -18,11 +18,11 @@ type Props = {
 
 export const AppProvider = ({ children }: Props) => {
    const [state, dispatch] = useReducer(reducer, defaultState);
-   const [isHydrated, setIsHydrated] = useState(false)
    const [isLoading, setIsLoading] = useState(true)
-   const {isSignedIn} = useUser()
+   const {isSignedIn, isLoaded} = useUser()
 
    useEffect(() => {
+      if (!isLoaded) return;
       async function loadData() {
          const [boardsRes, tasksRes] = await Promise.all([
             fetch("/api/boards"),
@@ -36,33 +36,37 @@ export const AppProvider = ({ children }: Props) => {
             userId: board.user_id,
             createdAt: board.created_at,
          }));
-
+         
+         dispatch({type: "SET_BOARDS", payload: {boards: normalizedBoards}})
+         
          const normalizedTasks = tasks.map((task: {board_id: string, created_at: string, due_date: string}) => ({
             ...task,
             boardId: task.board_id,
             createdAt: task.created_at,
             dueDate: task.due_date,
          }));
-
          
-         dispatch({type: "SET_BOARDS", payload: {boards: normalizedBoards}})
          dispatch({type: "SET_TASKS", payload: {tasks: normalizedTasks}})
+
          setIsLoading(false)
-         setIsHydrated(true)
       }
 
-
-
-      if (!isSignedIn) {
-         loadData()
-      } {
+      function loadDemo() {
          dispatch({type: "SET_BOARDS", payload: {boards: demoState.boards}})
          dispatch({type: "SET_TASKS", payload: {tasks: demoState.tasks}})
+         setIsLoading(false)
+      }
+      
+
+      if (isSignedIn) {
+         loadData()
+      } else {
+         loadDemo()
       }
 
-   }, [isSignedIn])
+   }, [isSignedIn, isLoaded])
 
-   if (!isHydrated || isLoading) {
+   if (isLoading) {
       return <div>Loading....</div>
    }
    return (

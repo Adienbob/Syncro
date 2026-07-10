@@ -1,7 +1,8 @@
-import { supabase } from "@/app/shared/services/supabase";
+import { createSupabaseServerClient } from "@/app/shared/services/supabase";
 
 
 export async function GET() {
+   const supabase = await createSupabaseServerClient()
    const { data, error } = await supabase
       .from("tasks")
       .select("*");
@@ -18,6 +19,8 @@ export async function GET() {
 
 export async function POST(req: Request) {
    try {
+         const supabase = await createSupabaseServerClient()
+
       const body = await req.json();
       console.log("BODY:", body);
 

@@ -1,11 +1,11 @@
-import { supabase } from "@/app/shared/services/supabase";
+import { createSupabaseServerClient } from "@/app/shared/services/supabase";
 
 export async function DELETE(
    req: Request,
    { params }: { params: Promise<{ id: string }> }
    ) {
    const { id } = await params;
-
+   const supabase = await createSupabaseServerClient()
    const { error } = await supabase
       .from("boards")
       .delete()
@@ -23,7 +23,7 @@ export async function PATCH(
    { params }: { params: Promise<{ id: string }> }
    ) {
    const { id } = await params;
-
+   const supabase = await createSupabaseServerClient()
    const body = await req.json();
    
    const { title } = body;

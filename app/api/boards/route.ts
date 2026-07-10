@@ -1,16 +1,15 @@
-import { supabase } from "@/app/shared/services/supabase";
+import { createSupabaseServerClient } from "@/app/shared/services/supabase";
 import { currentUser } from "@clerk/nextjs/server";
 
 
 export async function GET() {
   const user = await currentUser()
-
-
+  const supabase = await createSupabaseServerClient()
   if (user === null) {
     const { data, error } = await supabase
       .from("boards")
       .select("*")
-      .eq("user_id", "demo-user")
+      .eq("user_id", "demo_user")
       if (error) {
           return Response.json(
             { error: error.message },
@@ -29,7 +28,6 @@ export async function GET() {
             { status: 500 }
           );
       }
-      console.log(data)
       return Response.json(data);
   }
 
@@ -37,6 +35,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const supabase = await createSupabaseServerClient()
     const body = await req.json();
 
 
