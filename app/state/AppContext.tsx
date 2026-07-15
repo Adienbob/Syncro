@@ -1,10 +1,11 @@
 "use client"
 import { ReactNode, createContext, useReducer, useContext, useEffect, useState } from 'react';
 import { defaultState, demoState } from './initialState';
+import LoadingSpinner from '../shared/ui/LoadingSpinner';
+import { useUser } from '@clerk/nextjs';
 import { reducer } from './reducer';
 import { Actions } from './actions';
-import { useUser } from '@clerk/nextjs';
-import LoadingSpinner from '../shared/ui/LoadingSpinner';
+import { Toaster } from "sonner";
 
 type ContextType = {
    state: typeof defaultState
@@ -73,6 +74,13 @@ export const AppProvider = ({ children }: Props) => {
    return (
       <AppContext.Provider value={{ state, dispatch }}>
          {children}
+         <Toaster
+            theme="dark"
+            position="bottom-right"
+            richColors
+            closeButton
+            duration={3000}
+         />
       </AppContext.Provider>
    )
 }
