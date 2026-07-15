@@ -26,14 +26,32 @@ export default function Column({tasks, name}: {tasks:  Task[], name: string}) {
                   <TaskCard task={t} />
                </div>
             )): (
-               <div className="emptyColumn">
-                  <span>No tasks ToDo yet</span>
-                  <p>
-                     ToDo tasks will appear here.
-                     Add a new task to get
-                     started.
-                  </p>
+               <div className="flex min-h-56 flex-col items-center justify-center rounded-xl border border-dashed border-border bg-surface-low px-6 py-10 text-center">
+               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-surface-high">
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  className="text-text-muted"
+               >
+                  <rect x="4" y="4" width="16" height="16" rx="2" />
+                  <path d="M8 12h8" />
+               </svg>
                </div>
+
+               <h3 className="mb-2 text-base font-semibold text-text-primary">
+               No {name} tasks
+               </h3>
+
+               <p className="max-w-xs text-sm leading-6 text-text-muted">
+               Tasks moved to <span className="text-text-secondary">{name}</span> will
+               appear here.
+               </p>
+            </div>
             )}
          </div>
       </section>

@@ -30,7 +30,33 @@ export default function BoardsGrid({boards, sortBy, setSortBy}: {boards: Board[]
             {boards.length > 0 ? boards.map( b => (
                <BoardCard key={b.id} title={b.title} id={b.id} createdAt={b.createdAt} />
             ))
-         : "No boards yet, Create one!"}
+         : (
+            <div className="col-span-full flex flex-col items-center justify-center rounded-xl border border-border bg-surface-low py-16 px-6 text-center">
+               <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-surface-high">
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  className="text-text-muted"
+               >
+                  <rect x="3" y="4" width="18" height="16" rx="2" />
+                  <path d="M8 9h8M8 13h5" />
+               </svg>
+               </div>
+
+               <h2 className="mb-2 text-xl font-semibold text-text-primary">
+               No boards yet
+               </h2>
+
+               <p className="max-w-sm text-body-md text-text-muted">
+               Create your first board to start organizing tasks, projects, and ideas.
+               </p>
+            </div>
+         )}
          </div>
       </div>
    )

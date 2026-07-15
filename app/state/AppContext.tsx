@@ -4,6 +4,7 @@ import { defaultState, demoState } from './initialState';
 import { reducer } from './reducer';
 import { Actions } from './actions';
 import { useUser } from '@clerk/nextjs';
+import LoadingSpinner from '../shared/ui/LoadingSpinner';
 
 type ContextType = {
    state: typeof defaultState
@@ -67,7 +68,7 @@ export const AppProvider = ({ children }: Props) => {
    }, [isSignedIn, isLoaded])
 
    if (isLoading) {
-      return <div>Loading....</div>
+      return <LoadingSpinner />
    }
    return (
       <AppContext.Provider value={{ state, dispatch }}>

@@ -38,7 +38,7 @@ export default function Boards() {
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
          />
-         <div className="p-6">
+         <div className="p-6 relative">
             <CreateBoard />
             <BoardsGrid boards={filteredBoards} sortBy={sortBy} setSortBy={setSortBy} />
          </div>
