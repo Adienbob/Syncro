@@ -6,10 +6,14 @@ import { useBoards } from "../hooks/useBoards"
 import { Board } from "@/app/types/models"
 import RenameBoardModal from "./RenameBoard";
 import Link from "next/link";
+import ConfirmDialog from "@/app/shared/ui/ConfirmationDialog";
 
 export default function BoardCard(board: Board) {
    const { deleteBoard } = useBoards()
    const [isRenameOpen, setIsRenameOpen] = useState(false)
+   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+
    return (
       <article className="p-4 bg-surface border border-border rounded-[8px] ">
          <div className="">
@@ -34,10 +38,20 @@ export default function BoardCard(board: Board) {
                   {isRenameOpen && (<RenameBoardModal board={board} isOpen={isRenameOpen} onClose={() => setIsRenameOpen(false)} />)}
 
                   <button className="text-on-surface-variant hover:text-red-500 transition-colors" onClick={(e) => {
-                     deleteBoard(board.id)
+                     setIsDeleteOpen(true)
                      e.preventDefault()
                      e.stopPropagation()
                   }}>
+                     <ConfirmDialog
+                        isOpen={isDeleteOpen}
+                        title="Delete board?"
+                        description="This action cannot be undone."
+                        onCancel={() => setIsDeleteOpen(false)}
+                        onConfirm={() => {
+                           deleteBoard(board.id);
+                           setIsDeleteOpen(false);
+                        }}
+                     />
                      <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 640 640"

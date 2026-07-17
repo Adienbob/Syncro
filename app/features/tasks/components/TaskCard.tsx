@@ -4,11 +4,13 @@ import { useState } from "react"
 import { Task } from "@/app/types/models"
 import { useDraggable } from "@dnd-kit/core"
 import TaskModal from "./TaskDetailsModal";
+import ConfirmDialog from "@/app/shared/ui/ConfirmationDialog";
 
 export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean}) {
    const { deleteTask, editTask, moveTask} = useTasks(task.boardId)
    const { setNodeRef, listeners, attributes } = useDraggable({id: task.id})
    const [isOpen, setIsOpen] = useState(false);
+   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
 
 
@@ -55,7 +57,19 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
                   <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
                </svg>
                </button>
-               <button className="text-on-surface-variant hover:text-red-500 transition-colors" onClick={() => deleteTask(task.id)}>
+               <button className="text-on-surface-variant hover:text-red-500 transition-colors" onClick={() => {
+                  setIsDeleteOpen(true);
+                  }}>
+                     <ConfirmDialog
+                        isOpen={isDeleteOpen}
+                        title="Delete Task?"
+                        description="This action cannot be undone."
+                        onCancel={() => setIsDeleteOpen(false)}
+                        onConfirm={() => {
+                           deleteTask(task.id);
+                           setIsDeleteOpen(false);
+                        }}
+                     />
                   <svg
                      xmlns="http://www.w3.org/2000/svg"
                      viewBox="0 0 640 640"

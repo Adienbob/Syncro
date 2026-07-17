@@ -14,7 +14,7 @@ export default function CreateBoard() {
                Create Board
             </button>
          </div>
-         <div className={isOpen ? "block" : "hidden"}>
+         <div className={isOpen ? "absolute left-[50%] top-[50%] -translate-1/2 mb-8 w-75" : "hidden"}>
             <div className="max-w-md rounded-md border border-border bg-surface p-6">
                <span className="block mb-4 text-text-secondary text-sm">
                   Please enter the title of your board
@@ -28,7 +28,7 @@ export default function CreateBoard() {
                   className="w-full rounded-md border border-border bg-background px-3 py-2 text-text-primary placeholder:text-text-muted outline-none focus:border-primary"
                />
 
-               <div className="mt-4 flex gap-2">
+               <div className="mt-4 flex justify-between gap-2">
                   <button
                      onClick={() => {
                         setIsOpen(false);
