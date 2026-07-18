@@ -32,6 +32,7 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
             <span className="px-2 py-0.5 rounded-[4px] text-primary-light bg-primary-light/10 leading-[14px] tracking-[0.55px] text-[11px] font-medium">{task.status.toLowerCase()}</span>
             <div className="flex gap-4 items-center">
                <button 
+                  aria-label="Edit Task"
                   className="text-on-surface-variant hover:text-amber-200 transition-colors"
                   onClick={() => {
                      setEditForm({
@@ -57,7 +58,7 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
                   <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
                </svg>
                </button>
-               <button className="text-on-surface-variant hover:text-red-500 transition-colors" onClick={() => {
+               <button aria-label="Delete Task" className="text-on-surface-variant hover:text-red-500 transition-colors" onClick={() => {
                   setIsDeleteOpen(true);
                   }}>
                      <ConfirmDialog
@@ -135,7 +136,11 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
             />
 
             {/* Priority */}
+            <label aria-label="priority" htmlFor="priority" className="sr-only">
+               Priority
+            </label>
             <select
+               id="priority"
                value={editForm.priority}
                onChange={(e) =>
                   setEditForm((prev) => ({

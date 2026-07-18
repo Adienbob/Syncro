@@ -82,7 +82,12 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
                      <path d="M5.25 9V7.5H8.25V9H5.25V9M2.25 5.25V3.75H11.25V5.25H2.25V5.25M0 1.5V0H13.5V1.5H0V1.5" fill="#E5E1E4"/>
                   </svg>
 
+                  <label htmlFor="sort-tasks" className="sr-only">
+                     Sort tasks
+                  </label>
+
                   <select
+                     id="sort-tasks"
                      value={sortBy}
                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as "A-Z" | "Z-A" | "newest" | "oldest" | "default")}
                      className="appearance-none text-center px-2.5 outline-none"

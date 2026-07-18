@@ -9,8 +9,12 @@ export default function BoardsGrid({boards, sortBy, setSortBy}: {boards: Board[]
             <svg width="14" height="9" viewBox="0 0 14 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                <path d="M5.25 9V7.5H8.25V9H5.25V9M2.25 5.25V3.75H11.25V5.25H2.25V5.25M0 1.5V0H13.5V1.5H0V1.5" fill="#E5E1E4"/>
             </svg>
+            <label htmlFor="sort-boards" className="sr-only">
+               Sort Boards
+            </label>
 
             <select
+               id="sort-boards"
                value={sortBy}
                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as "A-Z" | "Z-A" | "newest" | "oldest" | "default")}
                className="appearance-none text-center px-2.5 outline-none"

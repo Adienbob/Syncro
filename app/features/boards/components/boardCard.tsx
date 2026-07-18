@@ -20,7 +20,7 @@ export default function BoardCard(board: Board) {
             <div className="flex justify-between items-center mb-1">
                <h2 className="font-semibold text-[20px] text-text-primary leading-7">{board.title}</h2>
                <div className="flex items-center gap-2.5">
-                  <button className="text-on-surface-variant hover:text-amber-200 transition-colors" onClick={() => setIsRenameOpen(prev => !prev)}>
+                  <button aria-label="Edit board" className="text-on-surface-variant hover:text-amber-200 transition-colors" onClick={() => setIsRenameOpen(prev => !prev)}>
                      <svg
                      xmlns="http://www.w3.org/2000/svg"
                      width="20"
@@ -37,7 +37,7 @@ export default function BoardCard(board: Board) {
                   </button>
                   {isRenameOpen && (<RenameBoardModal board={board} isOpen={isRenameOpen} onClose={() => setIsRenameOpen(false)} />)}
 
-                  <button className="text-on-surface-variant hover:text-red-500 transition-colors" onClick={(e) => {
+                  <button aria-label="Delete board" className="text-on-surface-variant hover:text-red-500 transition-colors" onClick={(e) => {
                      setIsDeleteOpen(true)
                      e.preventDefault()
                      e.stopPropagation()
