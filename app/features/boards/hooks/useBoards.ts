@@ -16,7 +16,7 @@ export function useBoards(): UseBoardsReturn {
    const boards = state.boards
    // Auth | Protect Actions
    const router = useRouter()
-   const { isSignedIn, user } = useUser()
+   const { isSignedIn } = useUser()
    
    
    async function addBoard(title: string) {
@@ -31,7 +31,7 @@ export function useBoards(): UseBoardsReturn {
             headers: {
                "Content-Type": "application/json",
             },
-            body: JSON.stringify({ title, user_id: user.id }),
+            body: JSON.stringify({ title }),
          });
          const newBoard: {id: string, user_id: string, created_at: string} = await res.json()
    

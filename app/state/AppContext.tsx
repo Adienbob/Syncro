@@ -30,7 +30,20 @@ export const AppProvider = ({ children }: Props) => {
             fetch("/api/boards"),
             fetch("/api/tasks"),
          ])
-         const boards = await boardsRes.json() 
+         const data = await boardsRes.json()
+         const boards = data.map(
+            (member: {
+               role: string;
+               boards: {
+                  user_id: string;
+                  created_at: string;
+                  [key: string]: unknown;
+               };
+            }) => ({
+               ...member.boards,
+               role: member.role,
+            })
+         );
          const tasks = await tasksRes.json() 
 
          const normalizedBoards = boards.map((board: {user_id: string, created_at: string}) => ({

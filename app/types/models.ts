@@ -23,3 +23,11 @@ export interface AppState {
    boards: Board[]
    tasks: Task[]
 }
+
+export interface BoardMember {
+   id: string;
+   boardId: string;
+   userId: string;
+   role: "owner" | "editor" | "viewer";
+   joinedAt: string;
+}
