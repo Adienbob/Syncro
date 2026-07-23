@@ -26,7 +26,8 @@ export async function GET() {
            *
           )
           `)
-        .eq("user_id", user?.id)
+        .eq("user_id", user.id)
+        console.log(data)
         if (error) {
             return Response.json(
               { error: error.message },
@@ -59,6 +60,7 @@ export async function POST(req: Request) {
       .insert({title, user_id: user.id})
       .select()
       .single();
+      console.log(user.id)
       
       if (error) {
         return Response.json({ error: error.message }, { status: 500 });

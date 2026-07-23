@@ -7,6 +7,7 @@ import Columns from "@/app/features/tasks/components/Columns";
 import { useBoards } from "@/app/features/boards/hooks/useBoards";
 import Header from "@/app/shared/ui/Header";
 import { useTasks } from "@/app/features/tasks/hooks/useTasks";
+import InviteMemberModal from "@/app/features/boards/components/InviteMemberModal";
 
 export default function BoardPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = use(params);
@@ -56,7 +57,6 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
       }
    })
 
-   console.log(filteredTasks)
    return (
       <div className="">
          <Header 
@@ -74,7 +74,10 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
                   </button>
                   <h1 className="text-primary-light text-[20px] leading-[28px] font-bold">{currentBoard?.title}</h1>
                </div>
-               <AddTaskModal id={id} />
+               <div className="flex gap-10 items-center">
+                  <AddTaskModal id={id} />
+                  <InviteMemberModal boardId={id} />
+               </div>
             </div>
             <div className="flex gap-5 mb-4">
                <div className="flex items-center px-3 py-[6px] rounded-full  bg-surface-high text-[14px] leading-5 text-on-background">

@@ -7,8 +7,9 @@ import { toast } from "sonner";
 interface UseBoardsReturn  {
    boards: Board[];
    addBoard: (title: string) => void
-   renameBoard: (id:string, title: string) => void
+   renameBoard: (id: string, title: string) => void
    deleteBoard: (id: string) => void
+   inviteMember: (id: string, email: string, role: "editor" | "viewer") => void
 }
 
 export function useBoards(): UseBoardsReturn {
@@ -96,5 +97,41 @@ export function useBoards(): UseBoardsReturn {
       }
    }
 
-   return { boards, addBoard, renameBoard, deleteBoard}
+   async function inviteMember( id: string, email: string, role: "editor" | "viewer" ) {
+      if (!isSignedIn) {
+         router.push("/sign-in");
+         return;
+      }
+
+      
+      try {
+         const res = await fetch(`/api/boards/${id}/members`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+               email,
+               role,
+            }),
+         });
+
+         const data = await res.json();
+
+         if (!res.ok) {
+            throw new Error(data.error || "Failed to invite member");
+         }
+
+         toast.success("Member invited successfully.");
+      } catch (err) {
+         if (err instanceof Error) {
+            toast.error(err.message);
+         } else {
+            toast.error("Something went wrong.");
+         }
+      }
+      
+   }
+
+   return { boards, addBoard, renameBoard, deleteBoard, inviteMember}
 }

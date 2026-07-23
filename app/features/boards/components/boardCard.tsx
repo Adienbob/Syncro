@@ -7,6 +7,7 @@ import { Board } from "@/app/types/models"
 import RenameBoardModal from "./RenameBoard";
 import Link from "next/link";
 import ConfirmDialog from "@/app/shared/ui/ConfirmationDialog";
+import InviteMemberModal from "./InviteMemberModal";
 
 export default function BoardCard(board: Board) {
    const { deleteBoard } = useBoards()
