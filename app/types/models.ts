@@ -30,4 +30,5 @@ export interface BoardMember {
    userId: string;
    role: "owner" | "editor" | "viewer";
    joinedAt: string;
+   boards: Board[]
 }
