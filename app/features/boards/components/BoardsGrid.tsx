@@ -1,6 +1,5 @@
 import BoardCard from "./boardCard";
 import { Board } from "@/app/types/models";
-import InviteMemberModal from "./InviteMemberModal";
 
 export default function BoardsGrid({boards, sortBy, setSortBy}: {boards: Board[], sortBy: string, setSortBy: (value: "A-Z" | "Z-A" | "newest" | "oldest" | "default") => void}) {
    

@@ -2,11 +2,19 @@ import { AppState } from "../types/models"
 
 
 const defaultState: AppState = {
+   members: [],
    boards: [],
    tasks: []
 }
 
 const demoState: AppState = {
+   members: [{
+      id: "56b34f91-e969-4b9b-9f83-003f49ad4ced",
+      boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
+      userId: "56m34f91-e969-4b9b-9f83-003f49ad4ced",
+      role: "owner",
+      joinedAt: "2026-01-01"
+   }], 
    boards: [{
       id: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
       title: "Syncro - Development Workspace",

@@ -22,7 +22,6 @@ export async function POST(req: Request) {
          const supabase = await createSupabaseServerClient()
 
       const body = await req.json();
-      console.log("BODY:", body);
 
       const { title, description, priority, dueDate, status, boardId } = body;
 

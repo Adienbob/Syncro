@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useBoards } from "../hooks/useBoards";
+import { useBoards } from "../../hooks/useBoards";
 
 export default function InviteMemberModal({ boardId }: { boardId: string }) {
    const { inviteMember } = useBoards()

@@ -21,16 +21,16 @@ export async function DELETE(
 
 export async function PATCH(
    req: Request,
-   { params }: { params: Promise<{ id: string }> }
+   { params }: { params: Promise<{ taskId: string }> }
    ) {
-   const { id } = await params;
+   const { taskId } = await params;
    const supabase = await createSupabaseServerClient()
    const body = await req.json();
    
    const { error } = await supabase
       .from("tasks")
       .update(body)
-      .eq("id", id);
+      .eq("id", taskId);
 
    if (error) {
       return Response.json({ error: error.message }, { status: 500 });

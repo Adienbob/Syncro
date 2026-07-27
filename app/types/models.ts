@@ -22,6 +22,7 @@ export interface Task {
 export interface AppState {
    boards: Board[]
    tasks: Task[]
+   members: BoardMember[]
 }
 
 export interface BoardMember {
@@ -30,5 +31,4 @@ export interface BoardMember {
    userId: string;
    role: "owner" | "editor" | "viewer";
    joinedAt: string;
-   boards: Board[]
 }

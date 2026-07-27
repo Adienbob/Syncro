@@ -18,25 +18,26 @@ export async function GET() {
           );
       }
         return Response.json(data);
-      } else {
+  } else {
       
-      const { data, error } = await supabase
-        .from("board_members")
-        .select(`
-          *,
-          boards (
-           *
-          )
-          `)
-        .eq("user_id", user.id)
-        if (error) {
-            return Response.json(
-              { error: error.message },
-              { status: 500 }
-            );
-        }
-        console.log("boards data", data)
-      return Response.json(data);
+  const { data, error } = await supabase
+    .from("board_members")
+    .select(`
+      boards (
+        *
+      )
+      `)
+      .eq("user_id", user.id)
+    if (error) {
+        return Response.json(
+          { error: error.message },
+          { status: 500 }
+        );
+    }
+
+    const boards = data.map((row) => row.boards);
+
+    return Response.json(boards);
   }
 
 }

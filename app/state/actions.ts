@@ -1,5 +1,7 @@
-import { Board, Task } from "../types/models"
+import { Board, Task, BoardMember } from "../types/models"
 export type Actions = 
+   | { type: "SET_MEMBERS", payload: { members: BoardMember[] }}
+   | { type: "REMOVE_MEMBER", payload: {id: string;}}
    | { type: "SET_BOARDS", payload: { boards: Board[] }}
    | { type: "ADD_BOARD", payload: { id: string, title: string, userId: string, createdAt: string}}
    | { type: "RENAME_BOARD", payload: {id: string, title: string}}

@@ -7,7 +7,7 @@ import Columns from "@/app/features/tasks/components/Columns";
 import { useBoards } from "@/app/features/boards/hooks/useBoards";
 import Header from "@/app/shared/ui/Header";
 import { useTasks } from "@/app/features/tasks/hooks/useTasks";
-import InviteMemberModal from "@/app/features/boards/components/InviteMemberModal";
+import InviteMemberModal from "@/app/features/boards/components/members/InviteMemberModal";
 
 export default function BoardPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = use(params);

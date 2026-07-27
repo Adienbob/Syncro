@@ -1,6 +1,23 @@
 import { createSupabaseServerClient } from "@/app/shared/services/supabase";
 import { currentUser, clerkClient } from "@clerk/nextjs/server";
 
+export async function GET() {
+   const supabase = await createSupabaseServerClient()
+   const { data, error } = await supabase
+      .from("board_members")
+      .select("*");
+
+   if (error) {
+      return Response.json(
+         { error: error.message },
+         { status: 500 }
+      );
+   }
+
+   return Response.json(data);
+}
+
+
 export async function POST(
    req: Request,
    { params }: { params: Promise<{ id: string }> }

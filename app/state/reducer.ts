@@ -4,16 +4,28 @@ import { Actions } from "./actions"
 
 export function reducer(state: AppState, action: Actions) {
    switch (action.type) {
+      case "SET_MEMBERS":
+         return {
+            ...state,
+            members: action.payload.members
+         }
+      case "REMOVE_MEMBER":
+         return {
+            ...state,
+            members: state.members.filter(
+               (member) => member.id !== action.payload.id
+            ),
+         }
       case "SET_BOARDS":
          return {
             ...state,
             boards: action.payload.boards
          }
-         case "ADD_BOARD":
-            return {
-            ...state,
-            boards: [...state.boards, {id: action.payload.id, title: action.payload.title, createdAt: action.payload.createdAt}]
-         }
+      case "ADD_BOARD":
+         return {
+         ...state,
+         boards: [...state.boards, {id: action.payload.id, title: action.payload.title, createdAt: action.payload.createdAt}]
+      }
       case "RENAME_BOARD": 
          return {
             ...state,

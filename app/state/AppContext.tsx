@@ -6,6 +6,7 @@ import { useUser } from '@clerk/nextjs';
 import { reducer } from './reducer';
 import { Actions } from './actions';
 import { Toaster } from "sonner";
+import { Board, BoardMember, Task } from '../types/models';
 
 type ContextType = {
    state: typeof defaultState
@@ -18,6 +19,32 @@ type Props = {
    children: ReactNode
 }
 
+type DBBoard = {
+   id: string;
+   title: string;
+   created_at: string;
+}
+
+type DBTask = {
+   id: string;
+   title: string;
+   description: string;
+   priority: "low" | "medium" | "high";
+   due_date: string | null;
+   status: "todo" | "in-progress" | "done";
+   board_id: string;
+   created_at: string;
+};
+
+type DBBoardMember = {
+   id: string;
+   board_id: string;
+   user_id: string;
+   role: "owner" | "editor" | "viewer";
+   joined_at: string;
+};
+
+
 export const AppProvider = ({ children }: Props) => {
    const [state, dispatch] = useReducer(reducer, defaultState);
    const [isLoading, setIsLoading] = useState(true)
@@ -26,41 +53,54 @@ export const AppProvider = ({ children }: Props) => {
    useEffect(() => {
       if (!isLoaded) return;
       async function loadData() {
-         const [boardsRes, tasksRes] = await Promise.all([
+         const [boardMembersRes, boardsRes, tasksRes] = await Promise.all([
+            fetch("/api/board-members"),
             fetch("/api/boards"),
             fetch("/api/tasks"),
          ])
-         const data = await boardsRes.json()
-         const boards = data.map(
-            (member: {
-               role: string;
-               boards: {
-                  user_id: string;
-                  created_at: string;
-                  [key: string]: unknown;
-               };
-            }) => ({
-               ...member.boards,
-               role: member.role,
-            })
-         );
-         const tasks = await tasksRes.json() 
+         const jsonBoards: DBBoard[] = await boardsRes.json()
 
-         const normalizedBoards = boards.map((board: {user_id: string, created_at: string}) => ({
-            ...board,
-            userId: board.user_id,
+         const members: DBBoardMember[] = await boardMembersRes.json()
+
+         // Normalize and dispatch members
+         const normalizedMembers = members.map((member: DBBoardMember) => ({
+            id: member.id,
+            boardId: member.board_id,
+            userId: member.user_id,
+            role: member.role,
+            joinedAt: member.joined_at,
+         }));
+         // console.log(normalizedMembers)
+         dispatch({
+            type: "SET_MEMBERS",
+            payload: { members: normalizedMembers },
+         });
+
+         // Normalize and dispatch boards
+         const normalizedBoards = jsonBoards.map((board: DBBoard) => ({
+            id: board.id,
+            title: board.title,
             createdAt: board.created_at,
          }));
          
-         dispatch({type: "SET_BOARDS", payload: {boards: normalizedBoards}})
+         console.log(normalizedBoards)
+         console.log(jsonBoards)
+         dispatch({
+            type: "SET_BOARDS",
+            payload: { boards: normalizedBoards },
+         });
          
-         const normalizedTasks = tasks.map((task: {board_id: string, created_at: string, due_date: string}) => ({
+         // Normalize and dispatch Tasks
+         const tasks: DBTask[] = await tasksRes.json() 
+         
+         const normalizedTasks = tasks.map((task: DBTask) => ({
             ...task,
             boardId: task.board_id,
             createdAt: task.created_at,
             dueDate: task.due_date,
          }));
          
+         // console.log(normalizedTasks)
          dispatch({type: "SET_TASKS", payload: {tasks: normalizedTasks}})
 
          setIsLoading(false)
