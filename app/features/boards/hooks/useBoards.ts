@@ -1,9 +1,10 @@
-import { useAppContext } from "@/app/state/AppContext";
+import { toast } from "sonner";
+import { useUser } from "@clerk/nextjs";
 import { Board } from "@/app/types/models";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs"
-import { toast } from "sonner";
 import { getRole } from "@/app/shared/utils/getRole";
+import { useAppContext } from "@/app/state/AppContext";
+import { requireAuth } from "@/app/shared/utils/requireAuth";
 
 
 interface UseBoardsReturn  {
@@ -66,13 +67,12 @@ export function useBoards(): UseBoardsReturn {
 
    async function renameBoard(id: string, title: string) {
       // Check if the user Signed in 
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
       // Check if the user is Owner
-      const myRole = getRole(members, id, user.id )
+      const myRole = getRole(members, id, user?.id )
 
       if (myRole !== "owner") {
          toast.error("You don't have permission");
@@ -106,14 +106,13 @@ export function useBoards(): UseBoardsReturn {
 
    async function deleteBoard(id: string) {
       // Check if the user Signed in 
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
 
       // Check if the user is Owner
-      const myRole = getRole(members, id, user.id )
+      const myRole = getRole(members, id, user?.id )
 
       if (myRole !== "owner") {
          toast.error("You don't have permission");
@@ -135,13 +134,12 @@ export function useBoards(): UseBoardsReturn {
 
    async function inviteMember( id: string, email: string, role: "editor" | "viewer" ) {
       // Check if the user Signed in 
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
       // Check if the user is Owner
-      const myRole = getRole(members, id, user.id )
+      const myRole = getRole(members, id, user?.id )
 
       if (myRole !== "owner") {
          toast.error("You don't have permission");

@@ -1,9 +1,10 @@
+import { toast } from "sonner"; 
+import { useUser } from "@clerk/nextjs";
+import { Task } from "@/app/types/models";
+import { useRouter } from "next/navigation";
 import { getRole } from "@/app/shared/utils/getRole";
 import { useAppContext } from "@/app/state/AppContext";
-import { Task } from "@/app/types/models";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner"; 
+import { requireAuth } from "@/app/shared/utils/requireAuth";
 
 interface UseTasksReturn {
    tasks: Task[];
@@ -31,8 +32,7 @@ export function useTasks(boardId: string): UseTasksReturn {
       dueDate: string | null,
       boardId: string
    ) {
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
@@ -74,8 +74,7 @@ export function useTasks(boardId: string): UseTasksReturn {
    }
 
    async function deleteTask(id: string) {
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
@@ -106,8 +105,7 @@ export function useTasks(boardId: string): UseTasksReturn {
       priority: "low" | "medium" | "high",
       dueDate: string | null
    ) {
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
@@ -139,8 +137,7 @@ export function useTasks(boardId: string): UseTasksReturn {
    }
 
    async function moveTask(id: string, newStatus: "todo" | "in-progress" | "done") {
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 

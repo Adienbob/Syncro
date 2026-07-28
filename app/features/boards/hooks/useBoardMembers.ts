@@ -1,8 +1,10 @@
-import { useAppContext } from "@/app/state/AppContext";
-import { BoardMember } from "@/app/types/models";
-import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs"
 import { toast } from "sonner";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { BoardMember } from "@/app/types/models";
+import { useAppContext } from "@/app/state/AppContext";
+import { requireAuth } from "@/app/shared/utils/requireAuth";
+
 
 
 interface UseBoardMember {
@@ -22,13 +24,12 @@ export function useBoardMember(): UseBoardMember {
 
 
    async function removeMember(memberId: string) {
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
       const myRole = members.find(
-         (m) => m.boardId === memberId && m.userId === user.id
+         (m) => m.boardId === memberId && m.userId === user?.id
       )?.role;
 
       if (myRole !== "owner") {
@@ -64,13 +65,12 @@ export function useBoardMember(): UseBoardMember {
       memberId: string,
       role: "owner" | "editor" | "viewer"
    ) {
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
       const myRole = members.find(
-         (m) => m.boardId === memberId && m.userId === user.id
+         (m) => m.boardId === memberId && m.userId === user?.id
       )?.role;
 
       if (myRole !== "owner") {
@@ -112,13 +112,12 @@ export function useBoardMember(): UseBoardMember {
    }
 
    async function inviteMember( id: string, email: string, role: "editor" | "viewer" ) {
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
       const myRole = members.find(
-         (m) => m.boardId === id && m.userId === user.id
+         (m) => m.boardId === id && m.userId === user?.id
       )?.role;
 
       if (myRole !== "owner") {
