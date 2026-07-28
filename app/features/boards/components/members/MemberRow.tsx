@@ -49,7 +49,7 @@ export default function MemberRow({ member }: Props) {
 
                   {menuOpen && (
                      <div className="absolute right-[50%] top-[50%] w-44 overflow-hidden rounded-lg border border-border bg-surface-high shadow-lg">
-                        <div className="relative">
+                        <div className="relative h-15">
                         <button
                            onClick={() => setIsRoleOpen((prev) => !prev)}
                            className="rounded-md border border-border bg-surface-high px-3 py-1 text-sm"
@@ -58,7 +58,7 @@ export default function MemberRow({ member }: Props) {
                         </button>
 
                         {isRoleOpen && (
-                           <div className="absolute right-0 mt-2 w-36 rounded-lg border border-border bg-surface shadow-lg">
+                           <div className="absolute right-0 top-0 mt-2 w-36 rounded-lg border border-border bg-surface shadow-lg">
                               <button
                                  onClick={() => updateMemberRole(member.id, "editor")}
                                  className="w-full px-3 py-2 text-left hover:bg-hover-bg"

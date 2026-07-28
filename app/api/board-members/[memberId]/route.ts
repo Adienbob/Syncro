@@ -11,7 +11,6 @@ export async function DELETE(
       .delete()
       .eq("id", memberId);
 
-   console.log(error)
    if (error) {
       return Response.json({ error: error.message }, { status: 500 });
    }
@@ -21,17 +20,17 @@ export async function DELETE(
 
 export async function PATCH(
    req: Request,
-   { params }: { params: Promise<{ id: string }> }
+   { params }: { params: Promise<{ memberId: string }> }
    ) {
-   const { id } = await params;
+   const { memberId } = await params;
    const supabase = await createSupabaseServerClient()
    const body = await req.json();
-   const role = body;
+   const { role } = body;
 
    const { error } = await supabase
       .from("board_members")
       .update({ role: role })
-      .eq("id", id);
+      .eq("id", memberId);
 
    
    const allowedRoles = ["editor", "viewer"];

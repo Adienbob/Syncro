@@ -15,17 +15,24 @@ interface UseBoardMember {
 
 export function useBoardMember(): UseBoardMember {
    const {state, dispatch} = useAppContext()
-
    const members = state.members
 
    const router = useRouter()
-   const { isSignedIn } = useUser()
-
+   const { isSignedIn, user } = useUser()
 
 
    async function removeMember(memberId: string) {
       if (!isSignedIn) {
          router.push("/sign-in");
+         return;
+      }
+
+      const myRole = members.find(
+         (m) => m.boardId === memberId && m.userId === user.id
+      )?.role;
+
+      if (myRole !== "owner") {
+         toast.error("You don't have permission");
          return;
       }
 
@@ -62,6 +69,15 @@ export function useBoardMember(): UseBoardMember {
          return;
       }
 
+      const myRole = members.find(
+         (m) => m.boardId === memberId && m.userId === user.id
+      )?.role;
+
+      if (myRole !== "owner") {
+         toast.error("You don't have permission");
+         return;
+      }
+
       try {
          const res = await fetch(`/api/board-members/${memberId}`, {
             method: "PATCH",
@@ -77,13 +93,13 @@ export function useBoardMember(): UseBoardMember {
             throw new Error(data.error || "Failed to update member role");
          }
 
-         // dispatch({
-         //    type: "UPDATE_MEMBER_ROLE",
-         //    payload: {
-         //       id: memberId,
-         //       role,
-         //    },
-         // });
+         dispatch({
+            type: "UPDATE_MEMBER",
+            payload: {
+               id: memberId,
+               role,
+            },
+         });
 
          toast.success("Member role updated successfully.");
       } catch (err) {
@@ -101,7 +117,14 @@ export function useBoardMember(): UseBoardMember {
          return;
       }
 
-      
+      const myRole = members.find(
+         (m) => m.boardId === id && m.userId === user.id
+      )?.role;
+
+      if (myRole !== "owner") {
+         toast.error("You don't have permission");
+         return;
+      }
       try {
          const res = await fetch(`/api/boards/${id}/members`, {
             method: "POST",
@@ -119,6 +142,19 @@ export function useBoardMember(): UseBoardMember {
          if (!res.ok) {
             throw new Error(data.error || "Failed to invite member");
          }
+
+         dispatch({
+            type: "ADD_MEMBER",
+            payload: {
+               member: {
+                  id: data.id,
+                  boardId: data.board_id,
+                  userId: data.user_id,
+                  role: data.role,
+                  joinedAt: data.joined_at,
+               },
+            },
+         });
 
          toast.success("Member invited successfully.");
       } catch (err) {

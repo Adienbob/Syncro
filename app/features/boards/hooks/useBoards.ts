@@ -3,6 +3,8 @@ import { Board } from "@/app/types/models";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs"
 import { toast } from "sonner";
+import { getRole } from "@/app/shared/utils/getRole";
+
 
 interface UseBoardsReturn  {
    boards: Board[];
@@ -17,10 +19,12 @@ export function useBoards(): UseBoardsReturn {
    const boards = state.boards
    // Auth | Protect Actions
    const router = useRouter()
-   const { isSignedIn } = useUser()
-   
+   const { isSignedIn, user } = useUser()
+   const members = state.members
+
    
    async function addBoard(title: string) {
+      // Check if the user Signed in 
       if (!isSignedIn) {
          router.push("/sign-in");
          return;
@@ -34,9 +38,22 @@ export function useBoards(): UseBoardsReturn {
             },
             body: JSON.stringify({ title }),
          });
-         const newBoard: {id: string, user_id: string, created_at: string} = await res.json()
+         const {board, member} = await res.json()
    
-         dispatch({ type: "ADD_BOARD", payload: {id: newBoard.id, title, userId: newBoard.user_id, createdAt: newBoard.created_at } })
+         dispatch({ type: "ADD_BOARD", payload: {id: board.id, title, userId: board.user_id, createdAt: board.created_at } })
+
+         dispatch({
+            type: "ADD_MEMBER",
+            payload: {
+               member: {
+                  id: member.id,
+                  boardId: member.board_id,
+                  userId: member.user_id,
+                  role: member.role,
+                  joinedAt: member.joined_at,
+               },
+            },
+         });
 
          toast.success("Board created successfully!")
       } catch {
@@ -48,8 +65,17 @@ export function useBoards(): UseBoardsReturn {
 
 
    async function renameBoard(id: string, title: string) {
+      // Check if the user Signed in 
       if (!isSignedIn) {
          router.push("/sign-in");
+         return;
+      }
+
+      // Check if the user is Owner
+      const myRole = getRole(members, id, user.id )
+
+      if (myRole !== "owner") {
+         toast.error("You don't have permission");
          return;
       }
 
@@ -79,8 +105,18 @@ export function useBoards(): UseBoardsReturn {
    }
 
    async function deleteBoard(id: string) {
+      // Check if the user Signed in 
       if (!isSignedIn) {
          router.push("/sign-in");
+         return;
+      }
+
+
+      // Check if the user is Owner
+      const myRole = getRole(members, id, user.id )
+
+      if (myRole !== "owner") {
+         toast.error("You don't have permission");
          return;
       }
 
@@ -98,12 +134,20 @@ export function useBoards(): UseBoardsReturn {
    }
 
    async function inviteMember( id: string, email: string, role: "editor" | "viewer" ) {
+      // Check if the user Signed in 
       if (!isSignedIn) {
          router.push("/sign-in");
          return;
       }
 
-      
+      // Check if the user is Owner
+      const myRole = getRole(members, id, user.id )
+
+      if (myRole !== "owner") {
+         toast.error("You don't have permission");
+         return;
+      }
+
       try {
          const res = await fetch(`/api/boards/${id}/members`, {
             method: "POST",

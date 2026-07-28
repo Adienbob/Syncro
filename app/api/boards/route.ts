@@ -57,19 +57,26 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title } = body;
     
-    const { data, error } = await supabase.rpc("create_board", {
+    const { data: board, error } = await supabase.rpc("create_board", {
       p_title: title,
     });
 
-    if (error) {
-      console.error(error);
+    const { data: member, error: memberError } = await supabase
+      .from("board_members")
+      .select("*")
+      .eq("board_id", board.id)
+      .eq("user_id", user.id)
+      .single();
+
+    if (error && memberError) {
+      console.error(error, memberError);
       return Response.json(
         { error: error.message },
         { status: 500 }
       );
     }
 
-    return Response.json(data);
+    return Response.json({board, member,});
   } catch (err) {
     console.log("CATCH ERROR:", err);
     return Response.json({ error: "Server crashed" }, { status: 500 });

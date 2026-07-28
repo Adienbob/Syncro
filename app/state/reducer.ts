@@ -9,6 +9,23 @@ export function reducer(state: AppState, action: Actions) {
             ...state,
             members: action.payload.members
          }
+      case "ADD_MEMBER":
+         return {
+            ...state,
+            members: [...state.members, action.payload.member],
+         };
+      case "UPDATE_MEMBER":
+         return {
+            ...state,
+            members: state.members.map((member) =>
+               member.id === action.payload.id
+                  ? {
+                     ...member,
+                     role: action.payload.role,
+                  }
+                  : member
+            ),
+         }
       case "REMOVE_MEMBER":
          return {
             ...state,

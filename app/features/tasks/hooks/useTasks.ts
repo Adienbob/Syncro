@@ -1,3 +1,4 @@
+import { getRole } from "@/app/shared/utils/getRole";
 import { useAppContext } from "@/app/state/AppContext";
 import { Task } from "@/app/types/models";
 import { useUser } from "@clerk/nextjs";
@@ -15,6 +16,9 @@ interface UseTasksReturn {
 export function useTasks(boardId: string): UseTasksReturn {
    const { state, dispatch } = useAppContext();
    const tasks = state.tasks.filter((t) => t.boardId === boardId);
+   const members = state.members
+   const { user } = useUser();
+   const myRole = getRole(members, boardId, user?.id)
 
    // Auth | Protect Actions
    const { isSignedIn } = useUser();
@@ -29,6 +33,11 @@ export function useTasks(boardId: string): UseTasksReturn {
    ) {
       if (!isSignedIn) {
          router.push("/sign-in");
+         return;
+      }
+
+      if (myRole === "viewer" || myRole === undefined) {
+         toast.error("You don't have permission");
          return;
       }
 
@@ -70,6 +79,11 @@ export function useTasks(boardId: string): UseTasksReturn {
          return;
       }
 
+      if (myRole === "viewer" || myRole === undefined) {
+         toast.error("You don't have permission");
+         return;
+      }
+
       try {
          const res = await fetch(`/api/tasks/${id}`, { method: "DELETE" });
 
@@ -94,6 +108,11 @@ export function useTasks(boardId: string): UseTasksReturn {
    ) {
       if (!isSignedIn) {
          router.push("/sign-in");
+         return;
+      }
+
+      if (myRole === "viewer" || myRole === undefined) {
+         toast.error("You don't have permission");
          return;
       }
 
@@ -122,6 +141,11 @@ export function useTasks(boardId: string): UseTasksReturn {
    async function moveTask(id: string, newStatus: "todo" | "in-progress" | "done") {
       if (!isSignedIn) {
          router.push("/sign-in");
+         return;
+      }
+
+      if (myRole === "viewer" || myRole === undefined) {
+         toast.error("You don't have permission");
          return;
       }
 

@@ -30,7 +30,6 @@ export default function MembersModal({
             className="w-full max-w-xl rounded-xl border border-border bg-surface shadow-modal"
             onClick={(e) => e.stopPropagation()}
          >
-            {/* Header */}
             <div className="flex items-center justify-between border-b border-border px-6 py-4">
                <h2 className="text-xl font-semibold text-text-primary">
                   Members
@@ -44,8 +43,7 @@ export default function MembersModal({
                </button>
             </div>
 
-            {/* Body */}
-            <div className="max-h-[450px] overflow-y-auto">
+            <div className="min-h-[250px] overflow-y-auto">
                {members.length === 0 ? (
                   <div className="py-12 text-center text-text-muted">
                      No members found.
