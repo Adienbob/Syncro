@@ -1,3 +1,4 @@
+import { createActivity } from "@/app/features/activity/utils/createActivity";
 import { createSupabaseServerClient } from "@/app/shared/services/supabase";
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -74,6 +75,34 @@ export async function POST(req: Request) {
         { error: error.message },
         { status: 500 }
       );
+    }
+
+  try {
+      const activity = await createActivity({
+        boardId: board.id,
+        actorId: user.id,
+        action: "board.created",
+        entityType: "board",
+        entityId: board.id,
+        metadata: {
+            snapshot: {
+              actor: {
+                  display:
+                    user.fullName ??
+                    user.username ??
+                    "Unknown User",
+              },
+              entity: {
+                  type: "board",
+                  display: board.title,
+              },
+            },
+            details: {},
+        },
+      });
+
+    } catch (error) {
+        console.error("Failed to create activity log:", error);
     }
 
     return Response.json({board, member,});

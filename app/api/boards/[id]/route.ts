@@ -12,6 +12,7 @@ export async function DELETE(
       .eq("id", id);
 
    if (error) {
+      console.log(error)
       return Response.json({ error: error.message }, { status: 500 });
    }
 
