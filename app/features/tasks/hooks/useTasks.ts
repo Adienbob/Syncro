@@ -45,7 +45,7 @@ export function useTasks(boardId: string): UseTasksReturn {
          const res = await fetch(`/api/tasks`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, description, priority, dueDate, board_Id: boardId }),
+            body: JSON.stringify({ title, description, priority, dueDate, boardId }),
          });
 
          if (!res.ok) {

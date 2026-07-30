@@ -1,4 +1,7 @@
+import { ActivityActions } from "@/app/features/activity/constants";
+import { createActivity } from "@/app/features/activity/utils/createActivity";
 import { createSupabaseServerClient } from "@/app/shared/services/supabase";
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
 
 export async function DELETE(
    req: Request,
@@ -6,14 +9,64 @@ export async function DELETE(
    ) {
    const { memberId } = await params;
    const supabase = await createSupabaseServerClient()
-   const { error } = await supabase
+
+   const { data: memberRow, error: getRowError } = await supabase 
+      .from("board_members")
+      .select("*")
+      .eq("id", memberId)
+      .single()
+      
+   if (getRowError) {
+      return Response.json({ error: getRowError.message }, { status: 500 });
+   }
+
+
+   const { error: removeMemberError } = await supabase
       .from("board_members")
       .delete()
-      .eq("id", memberId);
+      .eq("id", memberId)
 
-   if (error) {
-      return Response.json({ error: error.message }, { status: 500 });
+   if (removeMemberError) {
+      return Response.json({ error: removeMemberError.message }, { status: 500 });
    }
+
+   const user = await currentUser();
+   if(!user) return null;
+
+   const clerk = await clerkClient();
+   const member = await clerk.users.getUser(memberRow.user_id);
+
+
+   try {
+      await createActivity({
+         boardId: memberRow.board_id,
+         actorId: user.id,
+         action: ActivityActions.MEMBER_REMOVED,
+         entityType: "member",
+         entityId: member.id,
+         metadata: {
+            snapshot: {
+               actor: {
+                  display:
+                     user.fullName ??
+                     user.username ??
+                     "Unknown User",
+               },
+               entity: {
+                  display: member.fullName ??
+                  member.username ??
+                  member.primaryEmailAddress?.emailAddress ??
+                  "Unknown User",
+               },
+            },
+            details: {},
+         },
+      });
+
+      } catch (error) {
+         console.error("Failed to create activity log:", error);
+   }
+
 
    return Response.json({ success: true });
 }
@@ -26,12 +79,6 @@ export async function PATCH(
    const supabase = await createSupabaseServerClient()
    const body = await req.json();
    const { role } = body;
-
-   const { error } = await supabase
-      .from("board_members")
-      .update({ role: role })
-      .eq("id", memberId);
-
    
    const allowedRoles = ["editor", "viewer"];
    if (!allowedRoles.includes(role)) {
@@ -40,9 +87,56 @@ export async function PATCH(
          { status: 400 }
       );
    }
+
+   const { data, error } = await supabase
+      .from("board_members")
+      .update({ role: role })
+      .eq("id", memberId)
+      .select()
+      .single();
+
+   
    
    if (error) {
       return Response.json({ error: error.message }, { status: 500 });
+   }
+   
+   const user = await currentUser();
+   if(!user) return null;
+
+   const clerk = await clerkClient();
+   const member = await clerk.users.getUser(data.user_id);
+
+   try {
+      await createActivity({
+         boardId: data.board_id,
+         actorId: user.id,
+         action: ActivityActions.MEMBER_ROLE_CHANGED,
+         entityType: "member",
+         entityId: member.id,
+         metadata: {
+            snapshot: {
+               actor: {
+                  display:
+                     user.fullName ??
+                     user.username ??
+                     "Unknown User",
+               },
+               entity: {
+                  display: member.fullName ??
+                  member.username ??
+                  member.primaryEmailAddress?.emailAddress ??
+                  "Unknown User",
+               },
+            },
+            details: {
+               role
+            },
+         },
+      });
+      
+      } catch (error) {
+         console.error("Failed to create activity log:", error);
    }
 
    return Response.json({ success: true });

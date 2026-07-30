@@ -1,8 +1,19 @@
 export type ActivityAction =
-   | "board.created";
+   | "board.created"
+   | "board.renamed"
+   | "board.deleted"
+   | "task.created"
+   | "task.updated"
+   | "task.deleted"
+   | "task.moved"
+   | "member.invited"
+   | "member.removed"
+   | "member.role_changed";
 
 export type ActivityEntityType =
-   | "board";
+   | "board"
+   | "task"
+   | "member";
 
 export interface ActivitySnapshot {
    actor: {
@@ -10,14 +21,15 @@ export interface ActivitySnapshot {
    };
 
    entity: {
-      type: ActivityEntityType;
       display: string;
    };
 }
 
+export type ActivityDetails = Record<string, unknown>;
+
 export interface ActivityMetadata {
    snapshot: ActivitySnapshot;
-   details: Record<string, never>;
+   details: ActivityDetails;
 }
 
 export interface ActivityLog {

@@ -1,3 +1,5 @@
+import { ActivityActions } from "@/app/features/activity/constants";
+import { createActivity } from "@/app/features/activity/utils/createActivity";
 import { createSupabaseServerClient } from "@/app/shared/services/supabase";
 import { currentUser, clerkClient } from "@clerk/nextjs/server";
 
@@ -69,6 +71,39 @@ export async function POST(
          { status: 500 }
       );
    }
+
+   try {
+      await createActivity({
+         boardId: boardId,
+         actorId: user.id,
+         action: ActivityActions.MEMBER_INVITED,
+         entityType: "member",
+         entityId: member.id,
+         metadata: {
+            snapshot: {
+               actor: {
+                  display:
+                     user.fullName ??
+                     user.username ??
+                     "Unknown User",
+               },
+               entity: {
+                  display: member.fullName ??
+                  member.username ??
+                  member.primaryEmailAddress?.emailAddress ??
+                  "Unknown User",
+               },
+            },
+            details: {
+               role
+            },
+         },
+      });
+
+      } catch (error) {
+         console.error("Failed to create activity log:", error);
+   }
+
    
    return Response.json(
       { message: "Member invited successfully." },

@@ -1,4 +1,5 @@
 import { createActivity } from "@/app/features/activity/utils/createActivity";
+import { ActivityActions } from "@/app/features/activity/constants";
 import { createSupabaseServerClient } from "@/app/shared/services/supabase";
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -78,10 +79,10 @@ export async function POST(req: Request) {
     }
 
   try {
-      const activity = await createActivity({
+      await createActivity({
         boardId: board.id,
         actorId: user.id,
-        action: "board.created",
+        action: ActivityActions.BOARD_CREATED,
         entityType: "board",
         entityId: board.id,
         metadata: {
@@ -93,7 +94,6 @@ export async function POST(req: Request) {
                     "Unknown User",
               },
               entity: {
-                  type: "board",
                   display: board.title,
               },
             },

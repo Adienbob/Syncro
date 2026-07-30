@@ -1,4 +1,7 @@
+import { ActivityActions } from "@/app/features/activity/constants";
+import { createActivity } from "@/app/features/activity/utils/createActivity";
 import { createSupabaseServerClient } from "@/app/shared/services/supabase";
+import { currentUser } from "@clerk/nextjs/server";
 
 
 export async function GET() {
@@ -19,7 +22,9 @@ export async function GET() {
 
 export async function POST(req: Request) {
    try {
-         const supabase = await createSupabaseServerClient()
+      const user = await currentUser()
+      if (!user) return null
+      const supabase = await createSupabaseServerClient()
 
       const body = await req.json();
 
@@ -35,6 +40,34 @@ export async function POST(req: Request) {
          return Response.json({ error: error.message }, { status: 500 });
       }
 
+      try {
+         await createActivity({
+            boardId: boardId,
+            actorId: user?.id,
+            action: ActivityActions.TASK_CREATED,
+            entityType: "task",
+            entityId: data.id,
+            metadata: {
+               snapshot: {
+                  actor: {
+                     display:
+                        user.fullName ??
+                        user.username ??
+                        "Unknown User",
+                  },
+                  entity: {
+                     display: title,
+                  },
+               },
+               details: {},
+            },
+         });
+   
+         } catch (error) {
+            console.error("Failed to create activity log:", error);
+      }
+
+      
       return Response.json(data);
    } catch (err) {
       console.log("CATCH ERROR:", err);
