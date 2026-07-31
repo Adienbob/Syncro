@@ -80,6 +80,20 @@ export async function PATCH(
    const supabase = await createSupabaseServerClient()
    const body = await req.json();
 
+
+   const { data: oldTask, error: oldTaskError } = await supabase
+      .from("tasks")
+      .select("status")
+      .eq("id", taskId)
+      .single();
+
+   if (oldTaskError) {
+      return Response.json(
+         { error: oldTaskError.message },
+         { status: 500 }
+      );
+   }
+
    // Check If user signed in 
    const user = await currentUser()
    if (!user) return null
@@ -95,11 +109,46 @@ export async function PATCH(
       return Response.json({ error: error.message }, { status: 500 });
    }
 
+   const statusChanged =
+      body.status !== undefined &&
+      oldTask.status !== task.status;
+
    const updatedFields = trackedFields.filter(
       (field) => body[field] !== undefined
    );
 
-   if (updatedFields.length > 0) {
+   if (statusChanged) {
+      try {
+         await createActivity({
+            boardId: task.board_id,
+            actorId: user.id,
+            action: ActivityActions.TASK_MOVED,
+            entityType: "task",
+            entityId: task.id,
+            metadata: {
+               snapshot: {
+                  actor: {
+                     display:
+                        user.fullName ??
+                        user.username ??
+                        "Unknown User",
+                  },
+                  entity: {
+                     display: task.title,
+                  },
+               },
+               details: {
+                  from: oldTask.status,
+                  to: task.status,
+               },
+            },
+         });
+      } catch (error) {
+         console.error("Failed to create activity log:", error);
+      }
+   }
+
+   if (updatedFields.length) {
       try {
          await createActivity({
             boardId: task.board_id,

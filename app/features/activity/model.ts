@@ -51,3 +51,10 @@ export interface CreateActivityInput {
    entityId: string;
    metadata: ActivityMetadata;
 }
+
+export interface FormattedActivity {
+   id: string;
+   action: ActivityAction;
+   message: string;
+   createdAt: string;
+}

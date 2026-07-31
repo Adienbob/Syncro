@@ -8,6 +8,7 @@ import { useBoards } from "@/app/features/boards/hooks/useBoards";
 import Header from "@/app/shared/ui/Header";
 import { useTasks } from "@/app/features/tasks/hooks/useTasks";
 import InviteMemberModal from "@/app/features/boards/components/members/InviteMemberModal";
+import ActivityList from "@/app/features/activity/components/ActivityList";
 
 export default function BoardPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = use(params);
@@ -129,6 +130,7 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
                
             </div>
             <Columns filteredTasks={filteredTasks} boardId={id} />
+            <ActivityList boardId={id} />
          </div>
       </div>
    )

@@ -11,7 +11,7 @@ export async function createActivity({
 }: CreateActivityInput): Promise<void> {
 
    const supabase = await createSupabaseServerClient()
-   const { data, error } = await supabase
+   const { error } = await supabase
       .from("activity_logs")
       .insert({
          board_id: boardId,
@@ -22,7 +22,6 @@ export async function createActivity({
          metadata,
       }).select().single();
 
-      console.log(data)
 
    if (error) {
       throw error;
