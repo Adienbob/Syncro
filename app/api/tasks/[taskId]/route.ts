@@ -12,31 +12,33 @@ const trackedFields = [
 
 export async function DELETE(
    req: Request,
-   { params }: { params: Promise<{ id: string }> }
+   { params }: { params: Promise<{ taskId: string }> }
    ) {
 
    const user = await currentUser()
    if (!user) return null
-   const { id } = await params;
+   const { taskId } = await params;
    const supabase = await createSupabaseServerClient()
 
 
    const { data: task, error: boardIdError } = await supabase 
       .from("tasks")
       .select("board_id, title")
-      .eq("id", id)
+      .eq("id", taskId)
       .single();
 
    if (boardIdError) {
+         console.log(boardIdError)
       return Response.json({ error: boardIdError.message }, { status: 500 });
    }
 
    const { error } = await supabase
       .from("tasks")
       .delete()
-      .eq("id", id)
+      .eq("id", taskId)
 
    if (error) {
+      console.log(error)
       return Response.json({ error: error.message }, { status: 500 });
    }
 
@@ -47,7 +49,7 @@ export async function DELETE(
          actorId: user.id,
          action: ActivityActions.TASK_DELETED,
          entityType: "task",
-         entityId: id,
+         entityId: taskId,
          metadata: {
             snapshot: {
                actor: {

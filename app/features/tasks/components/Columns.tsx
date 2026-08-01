@@ -17,6 +17,10 @@ export default function Columns({boardId, filteredTasks}: {boardId: string, filt
 
    const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
 
+   // console.log(filteredTasks)
+   // console.log(todoTasks)
+   // console.log(inProgressTasks)
+   // console.log(doneTasks)
    function handleDragStart(event: DragStartEvent) {
       setActiveTaskId(String(event.active.id));
    }

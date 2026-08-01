@@ -64,7 +64,7 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
          />
-         <div className="p-6">
+         <div className="p-6 grid">
             <div className="flex justify-between items-center mb-4">
                <div className="flex gap-4">
                   <button className="" onClick={() => router.push("/BoardsPage")}>
@@ -129,8 +129,10 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
                </div>
                
             </div>
-            <Columns filteredTasks={filteredTasks} boardId={id} />
-            <ActivityList boardId={id} />
+            <div className="grid gap-5">
+               <Columns filteredTasks={filteredTasks} boardId={id} />
+               <ActivityList boardId={id} />
+            </div>
          </div>
       </div>
    )

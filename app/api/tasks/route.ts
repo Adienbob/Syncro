@@ -10,6 +10,8 @@ export async function GET() {
       .from("tasks")
       .select("*");
 
+      console.log(data)
+
    if (error) {
       return Response.json(
          { error: error.message },
@@ -28,11 +30,11 @@ export async function POST(req: Request) {
 
       const body = await req.json();
 
-      const { title, description, priority, dueDate, status, boardId } = body;
+      const { title, description, priority, dueDate, boardId } = body;
 
       const { data, error } = await supabase
          .from("tasks")
-         .insert([{ title, description, priority, due_date: dueDate, status, board_id: boardId }])
+         .insert([{ title, description, priority, due_date: dueDate, board_id: boardId }])
          .select()
          .single();
 

@@ -4,7 +4,8 @@ import { AppState } from "../types/models"
 const defaultState: AppState = {
    members: [],
    boards: [],
-   tasks: []
+   tasks: [],
+   activities: []
 }
 
 const demoState: AppState = {
@@ -81,7 +82,8 @@ const demoState: AppState = {
          dueDate: null,
          boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
       }
-   ]
+   ],
+   activities: []
 }
 
 export { defaultState, demoState }

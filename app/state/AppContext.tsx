@@ -6,7 +6,6 @@ import { useUser } from '@clerk/nextjs';
 import { reducer } from './reducer';
 import { Actions } from './actions';
 import { Toaster } from "sonner";
-import { Board, BoardMember, Task } from '../types/models';
 
 type ContextType = {
    state: typeof defaultState
@@ -58,11 +57,10 @@ export const AppProvider = ({ children }: Props) => {
             fetch("/api/boards"),
             fetch("/api/tasks"),
          ])
-         const jsonBoards: DBBoard[] = await boardsRes.json()
-
-         const members: DBBoardMember[] = await boardMembersRes.json()
-
+         
+         
          // Normalize and dispatch members
+         const members: DBBoardMember[] = await boardMembersRes.json()
          const normalizedMembers = members.map((member: DBBoardMember) => ({
             id: member.id,
             boardId: member.board_id,
@@ -70,29 +68,28 @@ export const AppProvider = ({ children }: Props) => {
             role: member.role,
             joinedAt: member.joined_at,
          }));
-         // console.log(normalizedMembers)
+         
          dispatch({
             type: "SET_MEMBERS",
             payload: { members: normalizedMembers },
          });
-
+         
          // Normalize and dispatch boards
+         const jsonBoards: DBBoard[] = await boardsRes.json()
          const normalizedBoards = jsonBoards.map((board: DBBoard) => ({
             id: board.id,
             title: board.title,
             createdAt: board.created_at,
          }));
          
-         console.log(normalizedBoards)
-         console.log(jsonBoards)
          dispatch({
             type: "SET_BOARDS",
             payload: { boards: normalizedBoards },
          });
          
+         
          // Normalize and dispatch Tasks
          const tasks: DBTask[] = await tasksRes.json() 
-         
          const normalizedTasks = tasks.map((task: DBTask) => ({
             ...task,
             boardId: task.board_id,
@@ -100,7 +97,6 @@ export const AppProvider = ({ children }: Props) => {
             dueDate: task.due_date,
          }));
          
-         // console.log(normalizedTasks)
          dispatch({type: "SET_TASKS", payload: {tasks: normalizedTasks}})
 
          setIsLoading(false)

@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ActivityAction, ActivityEntityType, ActivityLog, ActivityMetadata, FormattedActivity } from "../model";
+import { ActivityAction, ActivityEntityType, ActivityLog, ActivityMetadata } from "@/app/types/models";
 import { formatActivity } from "../utils/formatActivity";
+import { useAppContext } from "@/app/state/AppContext";
+import { useAuth } from "@clerk/nextjs";
+import { supabaseBrowser } from "@/app/shared/services/supabase-browser";
 
 export interface ActivityLogDB {
    id: string;
@@ -16,15 +19,32 @@ export interface ActivityLogDB {
 }
 
 export function useActivity(boardId: string) {
-   const [activities, setActivities] = useState<FormattedActivity[]>([]);
+   const { state, dispatch } = useAppContext();
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
 
+   const { getToken } = useAuth();
+
+
+   function normalizeActivity(activity: ActivityLogDB): ActivityLog {
+      return {
+         ...activity,
+         createdAt: activity.created_at,
+         boardId: activity.board_id,
+         actorId: activity.actor_id,
+         entityType: activity.entity_type,
+         entityId: activity.entity_id,
+      };
+   }
+
    useEffect(() => {
-      async function loadActivities() {
+      let channel: ReturnType<typeof supabaseBrowser.channel> | null = null;
+
+      async function initialize() {
          try {
             setLoading(true);
 
+            // Initial 20 activities
             const res = await fetch(`/api/boards/${boardId}/activity`);
 
             if (!res.ok) {
@@ -33,16 +53,47 @@ export function useActivity(boardId: string) {
 
             const rawData: ActivityLogDB[] = await res.json();
 
-            const activities: ActivityLog[] = rawData.map((activity: ActivityLogDB) => ({
-               ...activity,
-               createdAt: activity.created_at,
-               boardId: activity.board_id,
-               actorId: activity.actor_id,
-               entityType: activity.entity_type,
-               entityId: activity.entity_id,
-            }));
+            const activities: ActivityLog[] = rawData.map(normalizeActivity);
 
-            setActivities(activities.map(formatActivity));
+            dispatch({
+               type: "SET_ACTIVITIES",
+               payload: { activities },
+            });
+
+            // Realtime 
+            const token = await getToken({
+               template: "supabase",
+            });
+
+            if (!token) {
+               throw new Error("Failed to get Supabase token.");
+            }
+
+            await supabaseBrowser.realtime.setAuth(token);
+
+            channel = supabaseBrowser
+               .channel(`activity-${boardId}`)
+               .on(
+                  "postgres_changes",
+                  {
+                     event: "INSERT",
+                     schema: "public",
+                     table: "activity_logs",
+                     filter: `board_id=eq.${boardId}`,
+                  },
+                  (payload) => {
+                     console.log("Realtime payload:", payload);
+                     const activity = normalizeActivity(payload.new as ActivityLogDB);
+
+                     dispatch({
+                        type: "ADD_ACTIVITY",
+                        payload: { activity },
+                     });
+                  }
+               )
+               .subscribe((status) => {
+                  console.log("Activity Realtime:", status);
+               });
          } catch (err) {
             setError(
                err instanceof Error
@@ -54,11 +105,16 @@ export function useActivity(boardId: string) {
          }
       }
 
-      loadActivities();
-   }, [boardId]);
+      initialize();
 
+      return () => {
+         if (channel) {
+            supabaseBrowser.removeChannel(channel);
+         }
+      };
+   }, [boardId, dispatch, getToken]);
    return {
-      activities,
+      activities: state.activities.map(formatActivity),
       loading,
       error,
    };

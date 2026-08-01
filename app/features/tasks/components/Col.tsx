@@ -6,6 +6,7 @@ import { useDroppable } from "@dnd-kit/core"
 export default function Column({tasks, name}: {tasks:  Task[], name: string}) {
    const { setNodeRef } = useDroppable({id: name.toLowerCase()})
 
+
    return (
       <section ref={setNodeRef}>
          <div>

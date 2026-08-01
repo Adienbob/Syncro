@@ -1,5 +1,5 @@
-import { CreateActivityInput } from "../model";
 import { createSupabaseServerClient } from "@/app/shared/services/supabase";
+import { CreateActivityInput } from "@/app/types/models";
 
 export async function createActivity({
    boardId,

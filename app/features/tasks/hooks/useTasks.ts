@@ -21,6 +21,7 @@ export function useTasks(boardId: string): UseTasksReturn {
    const { user } = useUser();
    const myRole = getRole(members, boardId, user?.id)
 
+
    // Auth | Protect Actions
    const { isSignedIn } = useUser();
    const router = useRouter();
@@ -30,7 +31,7 @@ export function useTasks(boardId: string): UseTasksReturn {
       description: string,
       priority: "low" | "medium" | "high",
       dueDate: string | null,
-      boardId: string
+      boardId: string,
    ) {
       if (!requireAuth({ isSignedIn, router })) {
          return;
@@ -52,7 +53,7 @@ export function useTasks(boardId: string): UseTasksReturn {
             throw new Error("Failed to create task.")
          }
 
-         const newTask: { id: string; created_at: string } = await res.json();
+         const newTask: { id: string; created_at: string, status: "todo" | "in-progress" | "done" } = await res.json();
 
          dispatch({
             type: "ADD_TASK",
@@ -64,6 +65,7 @@ export function useTasks(boardId: string): UseTasksReturn {
                priority,
                dueDate,
                boardId,
+               status: newTask.status,
             },
          });
 

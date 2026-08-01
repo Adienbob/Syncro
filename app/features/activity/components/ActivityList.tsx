@@ -2,6 +2,7 @@
 
 import { useActivity } from "../hooks/useActivity";
 import ActivityCard from "./ActivityCard";
+import ActivityListSkeleton from "./ActivitySkeleton";
 
 interface Props {
    boardId: string;
@@ -12,9 +13,7 @@ export default function ActivityList({ boardId }: Props) {
 
    if (loading) {
       return (
-         <div className="space-y-3">
-            Loading...
-         </div>
+         <ActivityListSkeleton />
       );
    }
 

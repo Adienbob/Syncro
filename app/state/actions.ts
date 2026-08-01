@@ -1,5 +1,7 @@
-import { Board, Task, BoardMember } from "../types/models"
+import { Board, Task, BoardMember, ActivityLog } from "../types/models"
 export type Actions = 
+   | { type: "SET_ACTIVITIES"; payload: { activities: ActivityLog[] } }
+   | { type: "ADD_ACTIVITY"; payload: { activity: ActivityLog } }
    | { type: "SET_MEMBERS", payload: { members: BoardMember[] }}
    | { type: "ADD_MEMBER", payload: { member: BoardMember}}
    | { type: "UPDATE_MEMBER";payload: {id: string, role: "owner" | "editor" | "viewer"}}

@@ -4,6 +4,26 @@ import { Actions } from "./actions"
 
 export function reducer(state: AppState, action: Actions) {
    switch (action.type) {
+      case "SET_ACTIVITIES":
+         return {
+            ...state,
+            activities: action.payload.activities,
+         }
+      case "ADD_ACTIVITY":
+         const exists = state.activities.some(
+            (activity) => activity.id === action.payload.activity.id
+         );
+
+         if (exists) {
+            return state;
+         }
+         return {
+            ...state,
+            activities: [
+               action.payload.activity,
+               ...state.activities,
+            ],
+         }
       case "SET_MEMBERS":
          return {
             ...state,
@@ -110,5 +130,7 @@ export function reducer(state: AppState, action: Actions) {
                   : t
                ))
          }
+      default:
+         return state;
    }
 }

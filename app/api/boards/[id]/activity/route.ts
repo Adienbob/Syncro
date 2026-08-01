@@ -4,12 +4,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
    
    const supabase = await createSupabaseServerClient()
    const { id } = await params;
-   console.log(id)
    const { data, error } = await supabase
       .from("activity_logs")
       .select("*")
       .eq("board_id", id)
-      .order("created_at", { ascending: false});
+      .order("created_at", { ascending: false})
+      .order("id", { ascending: false })
+      .limit(20);
       
    if (error) {
       console.log(error)
@@ -18,6 +19,5 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
          { status: 500 }
       );
    }
-   console.log(data)
    return Response.json(data);
 }

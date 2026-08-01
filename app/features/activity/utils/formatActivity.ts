@@ -1,12 +1,11 @@
+import { ActivityLog, FormattedActivity } from "@/app/types/models";
 import { ActivityActions } from "../constants";
-import { ActivityLog, FormattedActivity } from "../model";
 
 export function formatActivity(
    activity: ActivityLog
 ): FormattedActivity {
    const { actor, entity } = activity.metadata.snapshot;
    const { details } = activity.metadata;
-   console.log(activity.createdAt)
 
    let message: string;
 
