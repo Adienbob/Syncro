@@ -12,7 +12,6 @@ interface UseBoardsReturn  {
    addBoard: (title: string) => Promise<void>
    renameBoard: (id: string, title: string) => Promise<void>
    deleteBoard: (id: string) => Promise<void>
-   inviteMember: (id: string, email: string, role: "editor" | "viewer") => Promise<void>
 }
 
 export function useBoards(): UseBoardsReturn {
@@ -132,48 +131,5 @@ export function useBoards(): UseBoardsReturn {
       }
    }
 
-   async function inviteMember( id: string, email: string, role: "editor" | "viewer" ) {
-      // Check if the user Signed in 
-      if (!requireAuth({ isSignedIn, router })) {
-         return;
-      }
-
-      // Check if the user is Owner
-      const myRole = getRole(members, id, user?.id )
-
-      if (myRole !== "owner") {
-         toast.error("You don't have permission");
-         return;
-      }
-
-      try {
-         const res = await fetch(`/api/boards/${id}/members`, {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-               email,
-               role,
-            }),
-         });
-
-         const data = await res.json();
-
-         if (!res.ok) {
-            throw new Error(data.error || "Failed to invite member");
-         }
-
-         toast.success("Member invited successfully.");
-      } catch (err) {
-         if (err instanceof Error) {
-            toast.error(err.message);
-         } else {
-            toast.error("Something went wrong.");
-         }
-      }
-      
-   }
-
-   return { boards, addBoard, renameBoard, deleteBoard, inviteMember}
+   return { boards, addBoard, renameBoard, deleteBoard}
 }

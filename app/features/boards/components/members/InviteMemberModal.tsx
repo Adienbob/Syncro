@@ -1,17 +1,14 @@
 import { useState } from "react";
-import { useBoards } from "../../hooks/useBoards";
+import { useBoardMember } from "../../hooks/useBoardMembers";
 
 export default function InviteMemberModal({ boardId }: { boardId: string }) {
-   const { inviteMember } = useBoards()
+   const { inviteMember } = useBoardMember()
    const [isOpen, setIsOpen] = useState(false);
    const [email, setEmail] = useState("");
    const [role, setRole] = useState<"editor" | "viewer">("editor");
 
    const handleInvite = () => {
       if (!email.trim()) return;
-
-      // inviteMember(boardId, email, role);
-
 
       setEmail("");
       setRole("editor");

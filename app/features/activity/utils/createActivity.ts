@@ -20,10 +20,10 @@ export async function createActivity({
          entity_type: entityType,
          entity_id: entityId,
          metadata,
-      }).select().single();
+      });
 
 
    if (error) {
-      throw error;
+      throw new Error(error.message);
    }
 }

@@ -6,9 +6,10 @@ import { useBoardMember } from "../../hooks/useBoardMembers";
 
 type Props = {
    member: BoardMember;
+   boardId: string;
 };
 
-export default function MemberRow({ member }: Props) {
+export default function MemberRow({ member, boardId }: Props) {
    const { removeMember, updateMemberRole } = useBoardMember()
    const [isRoleOpen, setIsRoleOpen] = useState(false);
    const [menuOpen, setMenuOpen] = useState(false);
@@ -60,14 +61,14 @@ export default function MemberRow({ member }: Props) {
                         {isRoleOpen && (
                            <div className="absolute right-0 top-0 mt-2 w-36 rounded-lg border border-border bg-surface shadow-lg">
                               <button
-                                 onClick={() => updateMemberRole(member.id, "editor")}
+                                 onClick={() => updateMemberRole(member.id, boardId, "editor")}
                                  className="w-full px-3 py-2 text-left hover:bg-hover-bg"
                               >
                                  Editor
                               </button>
 
                               <button
-                                 onClick={() => updateMemberRole(member.id, "viewer")}
+                                 onClick={() => updateMemberRole(member.id, boardId, "viewer")}
                                  className="w-full px-3 py-2 text-left hover:bg-hover-bg"
                               >
                                  Viewer
@@ -77,7 +78,7 @@ export default function MemberRow({ member }: Props) {
                      </div>
 
                         <button onClick={() => {
-                           removeMember(member.id)
+                           removeMember(member.id, boardId)
                            setIsRoleOpen(false)
                         }} className="block w-full px-4 py-3 text-left text-sm text-error transition hover:bg-hover-bg">
                            Remove Member

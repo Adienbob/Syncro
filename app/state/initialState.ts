@@ -5,7 +5,8 @@ const defaultState: AppState = {
    members: [],
    boards: [],
    tasks: [],
-   activities: []
+   activities: [],
+   notifications: [],
 }
 
 const demoState: AppState = {
@@ -83,7 +84,8 @@ const demoState: AppState = {
          boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
       }
    ],
-   activities: []
+   activities: [],
+   notifications: []
 }
 
 export { defaultState, demoState }

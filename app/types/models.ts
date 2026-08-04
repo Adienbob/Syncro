@@ -24,6 +24,7 @@ export interface AppState {
    tasks: Task[]
    members: BoardMember[]
    activities: ActivityLog[]
+   notifications: AppNotification[]
 }
 
 // Board Member model
@@ -94,5 +95,62 @@ export interface FormattedActivity {
    id: string;
    action: ActivityAction;
    message: string;
+   createdAt: string;
+}
+
+
+// Notifications model types
+export type NotificationType =
+   | "member.invited"
+   | "member.role_changed"
+   | "task.assigned";
+
+export interface NotificationMetadata {
+   snapshot: {
+      actor: {
+         display: string;
+      };
+
+      board: {
+         display: string;
+      };
+
+      task?: {
+         display: string;
+      };
+
+      role?: string;
+   };
+
+   details: Record<string, never>;
+}
+
+export interface AppNotification  {
+   id: string;
+
+   userId: string;
+
+   boardId: string;
+
+   type: NotificationType;
+
+   metadata: NotificationMetadata;
+
+   isRead: boolean;
+
+   createdAt: string;
+}
+
+export interface FormattedNotification {
+   id: string;
+
+   title: string;
+
+   description: string;
+
+   boardId: string;
+
+   isRead: boolean;
+
    createdAt: string;
 }

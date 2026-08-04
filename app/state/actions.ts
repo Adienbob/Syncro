@@ -1,5 +1,9 @@
-import { Board, Task, BoardMember, ActivityLog } from "../types/models"
+import { Board, Task, BoardMember, ActivityLog, AppNotification } from "../types/models"
 export type Actions = 
+   | { type: "SET_NOTIFICATIONS"; payload: { notifications: AppNotification[] } }
+   | { type: "ADD_NOTIFICATION"; payload: { notification: AppNotification } }
+   | { type: "MARK_NOTIFICATION_READ"; payload: { id: string } }
+   | { type: "MARK_ALL_NOTIFICATIONS_READ" }
    | { type: "SET_ACTIVITIES"; payload: { activities: ActivityLog[] } }
    | { type: "ADD_ACTIVITY"; payload: { activity: ActivityLog } }
    | { type: "SET_MEMBERS", payload: { members: BoardMember[] }}

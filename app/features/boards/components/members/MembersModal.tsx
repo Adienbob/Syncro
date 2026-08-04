@@ -53,6 +53,7 @@ export default function MembersModal({
                      <MemberRow
                         key={member.id}
                         member={member}
+                        boardId={boardId}
                      />
                   ))
                )}

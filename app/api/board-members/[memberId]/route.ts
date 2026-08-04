@@ -1,5 +1,7 @@
 import { ActivityActions } from "@/app/features/activity/constants";
 import { createActivity } from "@/app/features/activity/utils/createActivity";
+import { NotificationTypes } from "@/app/features/notifications/constants";
+import { createNotification } from "@/app/features/notifications/utils/createNotification";
 import { createSupabaseServerClient } from "@/app/shared/services/supabase";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 
@@ -74,12 +76,14 @@ export async function DELETE(
 export async function PATCH(
    req: Request,
    { params }: { params: Promise<{ memberId: string }> }
-   ) {
+) {
    const { memberId } = await params;
    const supabase = await createSupabaseServerClient()
    const body = await req.json();
    const { role } = body;
    
+   const user = await currentUser();
+   if(!user) return null;
    const allowedRoles = ["editor", "viewer"];
    if (!allowedRoles.includes(role)) {
       return Response.json(
@@ -95,14 +99,22 @@ export async function PATCH(
       .select()
       .single();
 
-   
-   
    if (error) {
+      console.log(error)
       return Response.json({ error: error.message }, { status: 500 });
    }
+
+   const { data: board, error: boardError } = await supabase 
+      .from("boards")
+      .select("title")
+      .eq("id", data.board_id)
+      .single();
    
-   const user = await currentUser();
-   if(!user) return null;
+   if (boardError) {
+      console.log(boardError)
+      throw new Error(boardError.message);
+   }
+   
 
    const clerk = await clerkClient();
    const member = await clerk.users.getUser(data.user_id);
@@ -134,6 +146,25 @@ export async function PATCH(
             },
          },
       });
+
+      await createNotification({
+         userId: member.id,
+         boardId: data.board_id,
+         type: NotificationTypes.MEMBER_ROLE_CHANGED,
+         metadata: {
+            snapshot: {
+               actor: {
+                  display: user.fullName ??
+                           user.username ??
+                           "Unknown User",
+               },
+               board: {
+                  display: board.title
+               }
+            },
+            details: {}
+         }
+      })
       
       } catch (error) {
          console.error("Failed to create activity log:", error);

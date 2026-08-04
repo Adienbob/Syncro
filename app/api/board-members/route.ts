@@ -1,5 +1,7 @@
 import { ActivityActions } from "@/app/features/activity/constants";
 import { createActivity } from "@/app/features/activity/utils/createActivity";
+import { NotificationTypes } from "@/app/features/notifications/constants";
+import { createNotification } from "@/app/features/notifications/utils/createNotification";
 import { createSupabaseServerClient } from "@/app/shared/services/supabase";
 import { currentUser, clerkClient } from "@clerk/nextjs/server";
 
@@ -33,15 +35,16 @@ export async function POST(
       );
    }
 
+   
    const { id: boardId } = await params;
    const { email, role } = await req.json();
-
+   
    const supabase = await createSupabaseServerClient();
    const clerk = await clerkClient();
    const users = await clerk.users.getUserList({
    emailAddress: [email],
    });
-
+   
    if (users.data.length === 0) {
       return Response.json(
          { error: "This email isn't registered." },
@@ -70,6 +73,16 @@ export async function POST(
          { error: error.message },
          { status: 500 }
       );
+   }
+   
+   const { data: board, error: boardError } = await supabase 
+      .from("boards")
+      .select("title")
+      .eq("id", boardId)
+      .single();
+      
+   if (boardError) {
+      throw new Error(boardError.message);
    }
 
    try {
@@ -100,11 +113,31 @@ export async function POST(
          },
       });
 
-      } catch (error) {
-         console.error("Failed to create activity log:", error);
-   }
 
+      await createNotification({
+         userId: member.id,
+         boardId: boardId,
+         type: NotificationTypes.MEMBER_INVITED,
+         metadata: {
+            snapshot: {
+               actor: {
+                  display: user.fullName ??
+                           user.username ??
+                           "Unknown User",
+               },
+               board: {
+                  display: board.title
+               }
+            },
+            details: {}
+         }
+      })
+      
+   } catch (error) {
+      console.error("Failed to create activity/notification:", error);
+   }
    
+   console.log(boardId)
    return Response.json(
       { message: "Member invited successfully." },
       { status: 201 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormattedActivity } from "../model";
+import { FormattedActivity } from "@/app/types/models";
 import { formatDistanceToNow } from "date-fns";
 
 interface Props {

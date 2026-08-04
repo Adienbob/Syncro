@@ -44,7 +44,6 @@ export function useActivity(boardId: string) {
          try {
             setLoading(true);
 
-            // Initial 20 activities
             const res = await fetch(`/api/boards/${boardId}/activity`);
 
             if (!res.ok) {
@@ -82,7 +81,6 @@ export function useActivity(boardId: string) {
                      filter: `board_id=eq.${boardId}`,
                   },
                   (payload) => {
-                     console.log("Realtime payload:", payload);
                      const activity = normalizeActivity(payload.new as ActivityLogDB);
 
                      dispatch({
@@ -91,9 +89,7 @@ export function useActivity(boardId: string) {
                      });
                   }
                )
-               .subscribe((status) => {
-                  console.log("Activity Realtime:", status);
-               });
+               .subscribe();
          } catch (err) {
             setError(
                err instanceof Error

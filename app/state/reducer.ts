@@ -4,6 +4,36 @@ import { Actions } from "./actions"
 
 export function reducer(state: AppState, action: Actions) {
    switch (action.type) {
+      case "SET_NOTIFICATIONS":
+         return {
+            ...state,
+            notifications: action.payload.notifications,
+         };
+      case "ADD_NOTIFICATION":
+         return {
+            ...state,
+            notifications: [
+               action.payload.notification,
+               ...state.notifications,
+            ],
+         };
+      case "MARK_NOTIFICATION_READ":
+         return {
+            ...state,
+            notifications: state.notifications.map((notification) =>
+               notification.id === action.payload.id
+                  ? { ...notification, isRead: true }
+                  : notification
+            ),
+         };
+      case "MARK_ALL_NOTIFICATIONS_READ":
+         return {
+            ...state,
+            notifications: state.notifications.map((notification) => ({
+               ...notification,
+               isRead: true,
+            })),
+         };
       case "SET_ACTIVITIES":
          return {
             ...state,

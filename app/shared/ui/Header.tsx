@@ -1,13 +1,105 @@
 "use client"
+import NotificationBell from "@/app/features/notifications/components/NotifiBill";
+import NotificationDropdown from "@/app/features/notifications/components/NotifiDropdown";
+import { useAppContext } from "@/app/state/AppContext";
+import { FormattedNotification } from "@/app/types/models";
 import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { requireAuth } from "../utils/requireAuth";
+import { toast } from "sonner";
+import { formatNotification } from "@/app/features/notifications/utils/formatNotification";
 
 export type HeaderProps = {
    searchTerm: string;
    onSearchChange: (value: string) => void;
 };
 export default function Header({searchTerm, onSearchChange}: HeaderProps) {
+   const { state, dispatch } = useAppContext()
+   const [ isNotificationOpen, setIsNotificationOpen ] = useState(false)
+   const formattedNotifications = state.notifications.map(formatNotification)
    const { isSignedIn } = useUser();
+   const router = useRouter()
+   const loading = false;
+
+   const unreadCount = formattedNotifications.filter(
+      (notification) => !notification.isRead
+   ).length;
    
+   async function handleMarkAllAsRead() {
+      if (!requireAuth({ isSignedIn, router })) {
+         return;
+      }
+
+      try {
+         const res = await fetch(
+            "/api/notifications/read-all",
+            {
+               method: "PATCH",
+            }
+         );
+
+         const data = await res.json();
+
+         if (!res.ok) {
+            throw new Error(
+               data.error ||
+               "Failed to mark all notifications as read."
+            );
+         }
+
+         dispatch({
+            type: "MARK_ALL_NOTIFICATIONS_READ",
+         });
+
+         toast.success("All notifications marked as read.");
+      } catch (err) {
+         if (err instanceof Error) {
+            toast.error(err.message);
+         } else {
+            toast.error("Something went wrong.");
+         }
+      }
+   }
+
+   async function handleNotificationClick(
+      notification: FormattedNotification
+   ) {
+      if (!requireAuth({ isSignedIn, router })) {
+         return;
+      }
+
+      try {
+         const res = await fetch(
+            `/api/notifications/${notification.id}`,
+            {
+               method: "PATCH",
+            }
+         );
+
+         const data = await res.json();
+
+         if (!res.ok) {
+            throw new Error(
+               data.error || "Failed to mark notification as read."
+            );
+         }
+
+         dispatch({
+            type: "MARK_NOTIFICATION_READ",
+            payload: {id: notification.id},
+         });
+
+         router.push(`/BoardPage/${notification.boardId}`);
+      } catch (err) {
+         if (err instanceof Error) {
+            toast.error(err.message);
+         } else {
+            toast.error("Something went wrong.");
+         }
+      }
+   }
+      
    return (
       <header className="text-white bg-background border-border border-b px-6 py-4.5 flex justify-between">
          <div className="flex gap-4 items-center">
@@ -63,9 +155,20 @@ export default function Header({searchTerm, onSearchChange}: HeaderProps) {
                />
             </div>
             
-            <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-               <path d="M0 17V15H2V8C2 6.61667 2.41667 5.3875 3.25 4.3125C4.08333 3.2375 5.16667 2.53333 6.5 2.2V1.5C6.5 1.08333 6.64583 0.729167 6.9375 0.4375C7.22917 0.145833 7.58333 0 8 0C8.41667 0 8.77083 0.145833 9.0625 0.4375C9.35417 0.729167 9.5 1.08333 9.5 1.5V2.2C10.8333 2.53333 11.9167 3.2375 12.75 4.3125C13.5833 5.3875 14 6.61667 14 8V15H16V17H0ZM8 20C7.45 20 6.97917 19.8042 6.5875 19.4125C6.19583 19.0208 6 18.55 6 18H10C10 18.55 9.80417 19.0208 9.4125 19.4125C9.02083 19.8042 8.55 20 8 20ZM4 15H12V8C12 6.9 11.6083 5.95833 10.825 5.175C10.0417 4.39167 9.1 4 8 4C6.9 4 5.95833 4.39167 5.175 5.175C4.39167 5.95833 4 6.9 4 8V15Z" fill="#CCC3D8"/>
-            </svg>
+            <div className="relative">
+               <button onClick={() => setIsNotificationOpen(prev => !prev)}>
+                  <NotificationBell unreadCount={unreadCount}    onClick={() => setIsNotificationOpen((prev) => !prev)}/>
+               </button>
+
+               {isNotificationOpen && (
+                  <NotificationDropdown
+                     notifications={formattedNotifications}
+                     loading={loading}
+                     onMarkAllAsRead={handleMarkAllAsRead}
+                     onNotificationClick={handleNotificationClick}
+                  />
+               )}
+            </div>
 
             {isSignedIn ? (
                <UserButton />

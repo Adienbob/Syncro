@@ -4,15 +4,16 @@ import { useRouter } from "next/navigation";
 import { BoardMember } from "@/app/types/models";
 import { useAppContext } from "@/app/state/AppContext";
 import { requireAuth } from "@/app/shared/utils/requireAuth";
+import { getRole } from "@/app/shared/utils/getRole";
 
 
 
 interface UseBoardMember {
    members: BoardMember[];
 
-   removeMember: (memberId: string) => Promise<void>;
+   removeMember: (memberId: string, boardId: string) => Promise<void>;
    inviteMember: (id: string, email: string, role: "editor" | "viewer") => Promise<void>
-   updateMemberRole: (memberId: string, role: "owner" | "editor" | "viewer") => Promise<void>;
+   updateMemberRole: (memberId: string, boardId: string, role: "owner" | "editor" | "viewer") => Promise<void>;
 }
 
 export function useBoardMember(): UseBoardMember {
@@ -23,15 +24,14 @@ export function useBoardMember(): UseBoardMember {
    const { isSignedIn, user } = useUser()
 
 
-   async function removeMember(memberId: string) {
+   async function removeMember(memberId: string, boardId: string) {
       if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
-      const myRole = members.find(
-         (m) => m.boardId === memberId && m.userId === user?.id
-      )?.role;
+      const myRole = getRole(members, boardId, user?.id )
 
+      console.log(myRole)
       if (myRole !== "owner") {
          toast.error("You don't have permission");
          return;
@@ -63,20 +63,20 @@ export function useBoardMember(): UseBoardMember {
 
    async function updateMemberRole(
       memberId: string,
+      boardId: string,
       role: "owner" | "editor" | "viewer"
    ) {
       if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
-      const myRole = members.find(
-         (m) => m.boardId === memberId && m.userId === user?.id
-      )?.role;
+      const myRole = getRole(members, boardId, user?.id )
 
       if (myRole !== "owner") {
          toast.error("You don't have permission");
          return;
       }
+
 
       try {
          const res = await fetch(`/api/board-members/${memberId}`, {
@@ -119,6 +119,9 @@ export function useBoardMember(): UseBoardMember {
       const myRole = members.find(
          (m) => m.boardId === id && m.userId === user?.id
       )?.role;
+
+      console.log(myRole)
+      console.log("hello")
 
       if (myRole !== "owner") {
          toast.error("You don't have permission");

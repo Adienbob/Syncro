@@ -6,6 +6,8 @@ import { useUser } from '@clerk/nextjs';
 import { reducer } from './reducer';
 import { Actions } from './actions';
 import { Toaster } from "sonner";
+import { NotificationMetadata, NotificationType } from '../types/models';
+import { useNotificationRealtime } from '../features/notifications/hooks/useNotificationRealtime';
 
 type ContextType = {
    state: typeof defaultState
@@ -43,6 +45,16 @@ type DBBoardMember = {
    joined_at: string;
 };
 
+type DBNotification = {
+   id: string;
+   user_id: string;
+   board_id: string;
+   type: NotificationType;
+   metadata: NotificationMetadata;
+   is_read: boolean;
+   created_at: string;
+};
+
 
 export const AppProvider = ({ children }: Props) => {
    const [state, dispatch] = useReducer(reducer, defaultState);
@@ -52,10 +64,11 @@ export const AppProvider = ({ children }: Props) => {
    useEffect(() => {
       if (!isLoaded) return;
       async function loadData() {
-         const [boardMembersRes, boardsRes, tasksRes] = await Promise.all([
+         const [boardMembersRes, boardsRes, tasksRes, notificationsRes] = await Promise.all([
             fetch("/api/board-members"),
             fetch("/api/boards"),
             fetch("/api/tasks"),
+            fetch("/api/notifications"),
          ])
          
          
@@ -99,24 +112,46 @@ export const AppProvider = ({ children }: Props) => {
          
          dispatch({type: "SET_TASKS", payload: {tasks: normalizedTasks}})
 
+
+         // Normalize and dispatch Notifications
+         const notifications: DBNotification[] = await notificationsRes.json();
+
+         const normalizedNotifications = notifications.map((notification: DBNotification) => ({
+            ...notification,
+            userId: notification.user_id,
+            boardId: notification.board_id,
+            isRead: notification.is_read,
+            createdAt: notification.created_at,
+         }));
+
+         dispatch({
+            type: "SET_NOTIFICATIONS",
+            payload: {
+               notifications: normalizedNotifications,
+            },
+         });
+         
+         console.log(normalizedNotifications)
          setIsLoading(false)
       }
-
+      
       function loadDemo() {
          dispatch({type: "SET_BOARDS", payload: {boards: demoState.boards}})
          dispatch({type: "SET_TASKS", payload: {tasks: demoState.tasks}})
          setIsLoading(false)
       }
       
-
+      
       if (isSignedIn) {
          loadData()
       } else {
          loadDemo()
       }
-
+      
    }, [isSignedIn, isLoaded])
-
+   
+   useNotificationRealtime();
+   
    if (isLoading) {
       return <LoadingSpinner />
    }
