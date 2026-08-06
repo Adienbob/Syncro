@@ -16,6 +16,7 @@ export interface Task {
    dueDate: string | null;
    status: "todo" | "in-progress" | "done",
    boardId: string;
+   assigneeId: string | null
 }
 
 // App state shape
@@ -41,13 +42,19 @@ export type ActivityAction =
    | "board.created"
    | "board.renamed"
    | "board.deleted"
+   
    | "task.created"
    | "task.updated"
    | "task.deleted"
    | "task.moved"
+   | "task.assigned"
+   | "task.unassigned"
+   | "task.reassigned"
+
    | "member.invited"
    | "member.removed"
-   | "member.role_changed";
+   | "member.role_changed"
+
 
 export type ActivityEntityType =
    | "board"

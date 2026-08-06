@@ -16,7 +16,12 @@ export async function DELETE(
    ) {
 
    const user = await currentUser()
-   if (!user) return null
+   if (!user) {
+      return Response.json(
+         { error: "Unauthorized" },
+         { status: 401 }
+      );
+   }
    const { taskId } = await params;
    const supabase = await createSupabaseServerClient()
 
@@ -28,7 +33,6 @@ export async function DELETE(
       .single();
 
    if (boardIdError) {
-         console.log(boardIdError)
       return Response.json({ error: boardIdError.message }, { status: 500 });
    }
 
@@ -38,7 +42,6 @@ export async function DELETE(
       .eq("id", taskId)
 
    if (error) {
-      console.log(error)
       return Response.json({ error: error.message }, { status: 500 });
    }
 
@@ -98,7 +101,12 @@ export async function PATCH(
 
    // Check If user signed in 
    const user = await currentUser()
-   if (!user) return null
+   if (!user) {
+      return Response.json(
+         { error: "Unauthorized" },
+         { status: 401 }
+      );
+   }
    
    const { data: task, error } = await supabase
       .from("tasks")

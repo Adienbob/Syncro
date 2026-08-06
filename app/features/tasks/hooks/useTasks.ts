@@ -8,14 +8,15 @@ import { requireAuth } from "@/app/shared/utils/requireAuth";
 
 interface UseTasksReturn {
    tasks: Task[];
-   addTask: (title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null, boardId: string) => void;
+   addTask: (title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null, boardId: string, assigneeId: string | null) => void;
    deleteTask: (id: string) => void;
    editTask: (id: string, title: string, description: string, priority: "low" | "medium" | "high", dueDate: string | null) => void;
    moveTask: (id: string, newStatus: "todo" | "in-progress" | "done") => void;
+   assignTask: (id: string, assignedId: string | null) => void;
 }
 
 export function useTasks(boardId: string): UseTasksReturn {
-   const { state, dispatch } = useAppContext();
+   const { state } = useAppContext();
    const tasks = state.tasks.filter((t) => t.boardId === boardId);
    const members = state.members
    const { user } = useUser();
@@ -32,6 +33,7 @@ export function useTasks(boardId: string): UseTasksReturn {
       priority: "low" | "medium" | "high",
       dueDate: string | null,
       boardId: string,
+      assignedId: string | null
    ) {
       if (!requireAuth({ isSignedIn, router })) {
          return;
@@ -46,28 +48,12 @@ export function useTasks(boardId: string): UseTasksReturn {
          const res = await fetch(`/api/tasks`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, description, priority, dueDate, boardId }),
+            body: JSON.stringify({ title, description, priority, dueDate, boardId, assignedId }),
          });
 
          if (!res.ok) {
             throw new Error("Failed to create task.")
          }
-
-         const newTask: { id: string; created_at: string, status: "todo" | "in-progress" | "done" } = await res.json();
-
-         dispatch({
-            type: "ADD_TASK",
-            payload: {
-               id: newTask.id,
-               title,
-               createdAt: newTask.created_at,
-               description,
-               priority,
-               dueDate,
-               boardId,
-               status: newTask.status,
-            },
-         });
 
          toast.success("Task created successfully!");
       } catch {
@@ -91,8 +77,6 @@ export function useTasks(boardId: string): UseTasksReturn {
          if (!res.ok) {
             throw new Error("Failed to delete task.")
          }
-
-         dispatch({ type: "DELETE_TASK", payload: { id } });
 
          toast.success("Task deleted successfully!");
       } catch {
@@ -127,11 +111,6 @@ export function useTasks(boardId: string): UseTasksReturn {
             throw new Error("Failed to update task.")
          }
 
-         dispatch({
-            type: "EDIT_TASK",
-            payload: { id, title, description, priority, dueDate },
-         });
-
          toast.success("Task updated successfully!");
       } catch {
          toast.error("Failed to update task.");
@@ -159,16 +138,46 @@ export function useTasks(boardId: string): UseTasksReturn {
             throw new Error("Failed to move task.")
          }
 
-         dispatch({
-            type: "MOVE_TASK",
-            payload: { id, ...(newStatus && { newStatus }) },
-         });
-
          toast.success("Task moved successfully!");
       } catch {
          toast.error("Failed to move task.");
       }
    }
 
-   return { tasks, addTask, deleteTask, editTask, moveTask };
+   async function assignTask(id: string, assigneeId: string | null) {
+      if (!requireAuth({ isSignedIn, router })) {
+         return;
+      }
+
+      if (myRole === "viewer" || myRole === undefined) {
+         toast.error("You don't have permission");
+         return;
+      }
+
+      try {
+         const res = await fetch(`/api/tasks/${id}/assignee`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ assigneeId }),
+         });
+
+         if (!res.ok) {
+            console.log(res.json())
+            throw new Error("Failed to assign task.")
+         }
+
+         toast.success(
+            assigneeId
+               ? "Task assigned successfully!"
+               : "Task unassigned successfully!"
+         );
+
+      } catch (error) {
+         toast.error(assigneeId
+         ? "Failed to assign task."
+         : "Failed to unassign task.");
+      }
+   }
+
+   return { tasks, addTask, deleteTask, editTask, moveTask, assignTask };
 }

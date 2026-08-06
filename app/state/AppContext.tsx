@@ -35,6 +35,7 @@ type DBTask = {
    status: "todo" | "in-progress" | "done";
    board_id: string;
    created_at: string;
+   assignee_id: string;
 };
 
 type DBBoardMember = {
@@ -108,6 +109,7 @@ export const AppProvider = ({ children }: Props) => {
             boardId: task.board_id,
             createdAt: task.created_at,
             dueDate: task.due_date,
+            assigneeId: task.assignee_id
          }));
          
          dispatch({type: "SET_TASKS", payload: {tasks: normalizedTasks}})

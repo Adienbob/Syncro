@@ -90,6 +90,7 @@ export function useActivity(boardId: string) {
                   }
                )
                .subscribe();
+               
          } catch (err) {
             setError(
                err instanceof Error
@@ -102,7 +103,6 @@ export function useActivity(boardId: string) {
       }
 
       initialize();
-
       return () => {
          if (channel) {
             supabaseBrowser.removeChannel(channel);

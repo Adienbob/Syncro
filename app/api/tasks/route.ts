@@ -25,7 +25,12 @@ export async function GET() {
 export async function POST(req: Request) {
    try {
       const user = await currentUser()
-      if (!user) return null
+      if (!user) {
+         return Response.json(
+            { error: "Unauthorized" },
+            { status: 401 }
+         );
+      }
       const supabase = await createSupabaseServerClient()
 
       const body = await req.json();

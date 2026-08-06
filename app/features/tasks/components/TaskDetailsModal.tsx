@@ -1,18 +1,25 @@
+import { useAppContext } from "@/app/state/AppContext";
+import { useState, useEffect } from "react";
 import { Task } from "@/app/types/models";
+import { useTasks } from "../hooks/useTasks";
 
 type TaskModalProps = {
   task: Task;
-  isOpen: boolean;
   onClose: () => void;
 };
 
 export default function TaskModal({
   task,
-  isOpen,
   onClose,
 }: TaskModalProps) {
-  if (!isOpen) return null;
+  const { state } = useAppContext();
+  const members = state.members
+  const { assignTask } = useTasks(task.boardId);
+  const [selectedAssignee, setSelectedAssignee] = useState(
+    task.assigneeId
+  );
 
+  
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="w-full max-w-lg bg-surface p-6 rounded-[8px] border border-border">
@@ -40,6 +47,39 @@ export default function TaskModal({
           <p className="text-text-secondary">
             {task.description}
           </p>
+
+          <select
+            value={selectedAssignee ?? ""}
+            onChange={(e) =>
+                setSelectedAssignee(
+                  e.target.value || null
+                )
+            }
+          >
+            <option value="">
+                Unassigned
+            </option>
+
+            {members.map((member) => (
+                <option
+                  key={member.id}
+                  value={member.userId}
+                >
+                  {member.userId}
+                </option>
+            ))}
+          </select>
+          <button
+            disabled={selectedAssignee === task.assigneeId}
+            onClick={() =>
+                assignTask(task.id, selectedAssignee)
+            }
+            className="rounded-md bg-primary px-3 py-2 text-sm text-white disabled:opacity-50"
+          >
+            {selectedAssignee
+                ? "Assign"
+                : "Unassign"}
+          </button>
 
           <div className="flex gap-2 text-sm">
             <span className="px-2 py-1 rounded bg-primary/10 text-primary">

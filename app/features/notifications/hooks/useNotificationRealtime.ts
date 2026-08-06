@@ -36,7 +36,7 @@ export function useNotificationRealtime() {
    }
 
    useEffect(() => {
-      if (!user || isSignedIn) return;
+      if (!user || !isSignedIn) return;
 
       let channel: ReturnType<typeof supabaseBrowser.channel> | null = null;
 
@@ -66,7 +66,6 @@ export function useNotificationRealtime() {
                      const notification = normalizeNotification(
                         payload.new as NotificationDB
                      );
-                     console.log(notification)
                      dispatch({
                         type: "ADD_NOTIFICATION",
                         payload: { notification },

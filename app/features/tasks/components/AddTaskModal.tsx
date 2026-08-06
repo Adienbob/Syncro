@@ -12,7 +12,7 @@ export default function AddTaskModal({ id }: { id: string }) {
    const handleAddTask = () => {
       if (!title.trim()) return;
 
-      addTask(title, description, priority, dueDate, id);
+      addTask(title, description, priority, dueDate, id, null);
 
       setTitle("");
       setDescription("");

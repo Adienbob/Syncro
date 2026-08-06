@@ -113,53 +113,34 @@ export function reducer(state: AppState, action: Actions) {
                ...state,
                tasks: action.payload.tasks
             }
-      case "ADD_TASK": 
+      case "ADD_TASK":
          return {
             ...state,
-            tasks: [...state.tasks, {
-               id: action.payload.id,
-               title: action.payload.title,
-               createdAt: action.payload.createdAt,
-               description: action.payload.description,
-               priority: action.payload.priority,
-               dueDate: action.payload.dueDate,
-               status: action.payload.status ?? "todo",
-               boardId: action.payload.boardId
-            }]
-         }
+            tasks: [...state.tasks, action.payload.task],
+         };
+
+      case "UPDATE_TASK":
+         return {
+            ...state,
+            tasks: state.tasks.map((task) =>
+               task.id === action.payload.task.id
+                  ? action.payload.task
+                  : task
+            ),
+         };
       case "DELETE_TASK":
+         console.log(
+            "Reducer DELETE",
+            action.payload.id,
+            state.tasks.map(t => t.id)
+         );
+
          return {
             ...state,
-            tasks: [...state.tasks.filter(t => t.id !== action.payload.id)]
-         }
-      case "MOVE_TASK":
-         return {
-            ...state,
-            tasks: state.tasks.map((t) => {
-               if (t.id === action.payload.id) {
-                  let updatedTask = t
-                  
-                  if (action.payload.newBoardId) {
-                     updatedTask = {...updatedTask, boardId: action.payload.newBoardId}
-                  }
-   
-                  if (action.payload.newStatus) {
-                     updatedTask = {...updatedTask, status: action.payload.newStatus}
-                  }
-   
-                  return updatedTask
-               } else return t
-            })
-         }
-      case "EDIT_TASK": 
-         return {
-            ...state,
-               tasks: state.tasks.map((t) => (
-                  t.id === action.payload.id
-                  ? {...t, title: action.payload.title, description: action.payload.description}
-                  : t
-               ))
-         }
+            tasks: state.tasks.filter(
+               (task) => task.id !== action.payload.id
+            ),
+         };
       default:
          return state;
    }

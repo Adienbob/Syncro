@@ -31,8 +31,12 @@ export async function PATCH(
    const body = await req.json();
 
    const user = await currentUser()
-   if (!user) return null
-
+   if (!user) {
+      return Response.json(
+         { error: "Unauthorized" },
+         { status: 401 }
+      );
+   }
    const { title } = body;
    const { error } = await supabase
       .from("boards")

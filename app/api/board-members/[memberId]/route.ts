@@ -33,7 +33,12 @@ export async function DELETE(
    }
 
    const user = await currentUser();
-   if(!user) return null;
+   if (!user) {
+      return Response.json(
+         { error: "Unauthorized" },
+         { status: 401 }
+      );
+   }
 
    const clerk = await clerkClient();
    const member = await clerk.users.getUser(memberRow.user_id);
@@ -83,7 +88,12 @@ export async function PATCH(
    const { role } = body;
    
    const user = await currentUser();
-   if(!user) return null;
+   if (!user) {
+      return Response.json(
+         { error: "Unauthorized" },
+         { status: 401 }
+      );
+   }
    const allowedRoles = ["editor", "viewer"];
    if (!allowedRoles.includes(role)) {
       return Response.json(
@@ -100,7 +110,6 @@ export async function PATCH(
       .single();
 
    if (error) {
-      console.log(error)
       return Response.json({ error: error.message }, { status: 500 });
    }
 
@@ -111,7 +120,6 @@ export async function PATCH(
       .single();
    
    if (boardError) {
-      console.log(boardError)
       throw new Error(boardError.message);
    }
    

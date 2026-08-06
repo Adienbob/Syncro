@@ -16,8 +16,6 @@ export async function GET() {
       .select("*")
       
       
-      console.log(data)
-      console.log(user.id)
    if (error) {
       console.log(error)
       return Response.json(

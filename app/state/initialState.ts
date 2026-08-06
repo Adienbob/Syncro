@@ -31,7 +31,8 @@ const demoState: AppState = {
          status: "done",
          createdAt: "2026-06-20",
          dueDate: null,
-         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
+         assigneeId: "Hussien Walid"
       },
       {
          id: "task-2",
@@ -41,7 +42,8 @@ const demoState: AppState = {
          status: "in-progress",
          createdAt: "2026-06-21",
          dueDate: null,
-         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
+         assigneeId: "Hussien Walid"
       },
       {
          id: "task-3",
@@ -51,7 +53,8 @@ const demoState: AppState = {
          status: "todo",
          createdAt: "2026-06-21",
          dueDate: null,
-         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
+         assigneeId: "Hussien Walid"
       },
       {
          id: "task-4",
@@ -61,7 +64,8 @@ const demoState: AppState = {
          status: "todo",
          createdAt: "2026-06-21",
          dueDate: null,
-         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
+         assigneeId: "Hussien Walid"
       },
       {
          id: "task-5",
@@ -71,7 +75,8 @@ const demoState: AppState = {
          status: "todo",
          createdAt: "2026-06-21",
          dueDate: null,
-         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
+         assigneeId: "Hussien Walid"
       },
       {
          id: "task-6",
@@ -81,7 +86,8 @@ const demoState: AppState = {
          status: "todo",
          createdAt: "2026-06-21",
          dueDate: null,
-         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced"
+         boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
+         assigneeId: "Hussien Walid"
       }
    ],
    activities: [],

@@ -6,7 +6,6 @@ export function formatActivity(
 ): FormattedActivity {
    const { actor, entity } = activity.metadata.snapshot;
    const { details } = activity.metadata;
-
    let message: string;
 
    switch (activity.action) {
@@ -56,8 +55,20 @@ export function formatActivity(
       case ActivityActions.MEMBER_REMOVED:
          message = `${actor.display} removed ${entity.display}`;
          break;
+      case ActivityActions.TASK_ASSIGNED:
+         message = `${actor.display} assigned ${entity.display} to ${details.to}`;
+         break;
+
+      case ActivityActions.TASK_UNASSIGNED:
+         message = `${actor.display} unassigned ${entity.display} from ${details.from}`;
+         break;
+
+      case ActivityActions.TASK_REASSIGNED:
+         message = `${actor.display} reassigned ${entity.display} from ${details.from} to ${details.to}`;
+         break;
 
       default:
+         console.log(activity.action)
          message = "Unknown activity";
    }
 

@@ -5,6 +5,7 @@ import { Task } from "@/app/types/models"
 import { useDraggable } from "@dnd-kit/core"
 import TaskModal from "./TaskDetailsModal";
 import ConfirmDialog from "@/app/shared/ui/ConfirmationDialog";
+import TaskAssignee from "./TaskAssignee";
 
 export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean}) {
    const { deleteTask, editTask, moveTask} = useTasks(task.boardId)
@@ -198,10 +199,17 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
                </button>
             </div>
          </div>
+         <TaskAssignee assigneeId={task.assigneeId} />
          <button className="bg-primary text-[#EDE0FF] px-4 py-2 rounded-[8px] text-[14px] font-semibold" onClick={() => setIsOpen(true)}>
          View
          </button>
-         <TaskModal task={task} isOpen={isOpen} onClose={() => setIsOpen(false)}/>
+         {isOpen && (
+            <TaskModal
+               key={task.id}
+               task={task}
+               onClose={() => setIsOpen(false)}
+            />
+         )}
       </article>
    )
 }
