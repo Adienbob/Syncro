@@ -101,8 +101,8 @@ export default function Header({searchTerm, onSearchChange}: HeaderProps) {
    }
       
    return (
-      <header className="text-white bg-background border-border border-b px-6 py-4.5 flex justify-between">
-         <div className="flex gap-4 items-center">
+      <header className="text-white bg-background border-border border-b px-4 py-4.5 flex justify-between">
+         <div className="flex gap-2 md:gap-4 items-center">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                <rect width="32" height="32" fill="url(#pattern0_13_5)"/>
                <defs>
@@ -113,15 +113,15 @@ export default function Header({searchTerm, onSearchChange}: HeaderProps) {
                </defs>
             </svg>
 
-            <span className="text-primary-light font-bold leading-7 text-[20px]">Syncro</span>
+            <span className="text-primary-light font-bold leading-7 text-[20px] mr-2.5">Syncro</span>
          </div>
 
          <div className="flex items-center gap-4">
             <div className="relative w-full max-w-md">
                <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                <svg
-                  width="18"
-                  height="18"
+                  width="16"
+                  height="16"
                   viewBox="0 0 18 18"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -141,6 +141,8 @@ export default function Header({searchTerm, onSearchChange}: HeaderProps) {
                className="
                   w-full
                   bg-[#1A1A1F]
+                  text-sm
+                  md:text-[16px]
                   border border-border
                   text-[#F4F4F5]
                   placeholder:text-[#A1A1AA]
@@ -155,7 +157,7 @@ export default function Header({searchTerm, onSearchChange}: HeaderProps) {
                />
             </div>
             
-            <div className="relative">
+            <div className="relative flex">
                <button onClick={() => setIsNotificationOpen(prev => !prev)}>
                   <NotificationBell unreadCount={unreadCount}    onClick={() => setIsNotificationOpen((prev) => !prev)}/>
                </button>

@@ -48,7 +48,7 @@ export default function ConfirmDialog({
             {description}
          </p>
 
-         <div className="mt-6 flex justify-end gap-3">
+         <div className="mt-6 flex justify-center gap-4">
             <button
                type="button"
                onClick={onCancel}

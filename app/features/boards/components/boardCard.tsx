@@ -195,7 +195,8 @@ export default function BoardCard(board: Board) {
                   }
                }}
                className="
-                  min-w-0
+                  w-10
+                  md:w-12.5
                   flex-1
                   rounded-md
                   border

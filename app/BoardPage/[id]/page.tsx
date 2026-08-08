@@ -68,7 +68,7 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
             onSearchChange={setSearchTerm}
          />
          <div className="p-6 grid">
-            <div className="flex justify-between items-center mb-4">
+            <div className="grid gap-5 md:gap-0 md:flex md:justify-between md:items-center mb-4">
                <div className="flex gap-4">
                   <button className="" onClick={() => router.push("/BoardsPage")}>
                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -78,7 +78,7 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
                   </button>
                   <h1 className="text-primary-light text-[20px] leading-[28px] font-bold">{currentBoard?.title}</h1>
                </div>
-               <div className="flex gap-10 items-center">
+               <div className="flex gap-5 lg:gap-10 items-center">
                   <AddTaskModal id={id} />
                   <InviteMemberModal boardId={id} />
                   <MembersModal boardId={id} />

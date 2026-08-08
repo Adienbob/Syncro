@@ -15,7 +15,10 @@ const demoState: AppState = {
       boardId: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
       userId: "56m34f91-e969-4b9b-9f83-003f49ad4ced",
       role: "owner",
-      joinedAt: "2026-01-01"
+      joinedAt: "2026-01-01",
+      displayName: "Hussien Walid",
+      imageUrl: "null",
+      email: "Hussienwalid125@gamil.com"
    }], 
    boards: [{
       id: "56c34f91-e969-4b9b-9f83-003f49ad4ced",
