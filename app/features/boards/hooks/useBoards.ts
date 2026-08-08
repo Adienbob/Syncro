@@ -39,6 +39,7 @@ export function useBoards(): UseBoardsReturn {
             body: JSON.stringify({ title }),
          });
          const {board, member} = await res.json()
+         console.log(member)
    
          dispatch({ type: "ADD_BOARD", payload: {id: board.id, title, userId: board.user_id, createdAt: board.created_at } })
 
@@ -49,15 +50,18 @@ export function useBoards(): UseBoardsReturn {
                   id: member.id,
                   boardId: member.board_id,
                   userId: member.user_id,
+                  displayName: member.display_name,
+                  imageUrl: member.image_url,
+                  email: member.email,
                   role: member.role,
                   joinedAt: member.joined_at,
                },
             },
          });
-
-         toast.success("Board created successfully!")
-      } catch {
          
+         toast.success("Board created successfully!")
+      } catch (error) {
+         console.log(error)
          toast.error("Failed to create board.")
       }
       

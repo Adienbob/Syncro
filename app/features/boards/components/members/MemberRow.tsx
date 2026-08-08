@@ -1,93 +1,133 @@
-"use client";
-
+import { formatDistanceToNow } from "date-fns";
+import Image from "next/image"
 import { useState } from "react";
-import { BoardMember } from "@/app/types/models";
 import { useBoardMember } from "../../hooks/useBoardMembers";
+import { BoardMember } from "@/app/types/models";
 
-type Props = {
+interface MemberRowProps {
    member: BoardMember;
-   boardId: string;
-};
+}
 
-export default function MemberRow({ member, boardId }: Props) {
-   const { removeMember, updateMemberRole } = useBoardMember()
-   const [isRoleOpen, setIsRoleOpen] = useState(false);
-   const [menuOpen, setMenuOpen] = useState(false);
+export function MemberRow({ member }: MemberRowProps) {
+   const { updateMemberRole, removeMember } = useBoardMember()
+   const [roleOpen, setRoleOpen] = useState(false);
+   const initials =
+      member.displayName
+         ?.split(" ")
+         .map((n) => n[0])
+         .slice(0, 2)
+         .join("")
+         .toUpperCase() ?? "?";
 
-   const roleColor = {
+   const roleStyles = {
       owner: "bg-primary/15 text-primary-light",
       editor: "bg-warning/15 text-warning",
       viewer: "bg-secondary text-text-secondary",
    };
 
+
    return (
-      <div className="relative flex items-center justify-between border-b border-border px-6 py-4 last:border-none">
-         <div>
-            <p className="font-medium text-text-primary">
-               {member.userId}
+      <div className="flex items-center justify-between rounded-lg px-4 py-3 transition hover:bg-hover-bg">
+      {/* Left */}
+      <div className="flex items-center gap-3 min-w-0">
+         {/* Avatar */}
+         {member.imageUrl ? (
+            <Image
+            src={member.imageUrl}
+            alt={member.displayName || ""}
+            className="h-10 w-10 rounded-full object-cover border border-border"
+            width={10}
+            height={10}
+            />
+         ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary-light">
+            {initials}
+            </div>
+         )}
+
+         {/* Info */}
+         <div className="min-w-0">
+            <p className="truncate text-sm font-medium text-text-primary">
+            {member.displayName}
             </p>
 
-            <p className="mt-1 text-sm text-text-muted">
-               Joined {member.joinedAt}
-            </p>
-         </div>
-
-         <div className="flex items-center gap-4">
-            <span
-               className={`rounded-md px-2 py-1 text-xs font-medium capitalize ${roleColor[member.role]}`}
-            >
-               {member.role}
+            <span className="mt-2 block text-[13px] text-text-muted">
+               {formatDistanceToNow(new Date(member.joinedAt), {
+                  addSuffix: true,
+               })}
             </span>
+         </div>
+      </div>
 
-            {member.role !== "owner" && (
-               <div className="relative">
+      {/* Right */}
+      {member.role && (
+         <div className="relative">
+            {member.role === "owner" ? (
+               <span
+                  className={`rounded-md px-2 py-1 text-xs font-medium capitalize ${roleStyles[member.role]}`}
+               >
+                  {member.role}
+               </span>
+            ) : (
+               <>
                   <button
-                     onClick={() => setMenuOpen((p) => !p)}
-                     className="rounded-md p-2 text-text-muted transition hover:bg-hover-bg hover:text-text-primary"
+                     type="button"
+                     onClick={() => setRoleOpen((prev) => !prev)}
+                     className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium capitalize transition hover:opacity-80 ${roleStyles[member.role]}`}
                   >
-                     ⋮
+                     {member.role}
+
+                     <span className="text-[10px]">▼</span>
                   </button>
 
-                  {menuOpen && (
-                     <div className="absolute right-[50%] top-[50%] w-44 overflow-hidden rounded-lg border border-border bg-surface-high shadow-lg">
-                        <div className="relative h-15">
+                  {roleOpen && (
+                     <div className="absolute right-0 top-full z-20 mt-2 w-32 overflow-hidden rounded-lg border border-border bg-surface shadow-lg">
                         <button
-                           onClick={() => setIsRoleOpen((prev) => !prev)}
-                           className="rounded-md border border-border bg-surface-high px-3 py-1 text-sm"
+                           type="button"
+                           onClick={() => {
+                              updateMemberRole(
+                                 member.id,
+                                 member.boardId,
+                                 "editor"
+                              );
+                              setRoleOpen(false);
+                           }}
+                           className="w-full px-3 py-2 text-left text-xs text-text-primary hover:bg-hover-bg"
                         >
-                           {member.role}
+                           Editor
                         </button>
 
-                        {isRoleOpen && (
-                           <div className="absolute right-0 top-0 mt-2 w-36 rounded-lg border border-border bg-surface shadow-lg">
-                              <button
-                                 onClick={() => updateMemberRole(member.id, boardId, "editor")}
-                                 className="w-full px-3 py-2 text-left hover:bg-hover-bg"
-                              >
-                                 Editor
-                              </button>
-
-                              <button
-                                 onClick={() => updateMemberRole(member.id, boardId, "viewer")}
-                                 className="w-full px-3 py-2 text-left hover:bg-hover-bg"
-                              >
-                                 Viewer
-                              </button>
-                           </div>
-                        )}
-                     </div>
-
-                        <button onClick={() => {
-                           removeMember(member.id, boardId)
-                           setIsRoleOpen(false)
-                        }} className="block w-full px-4 py-3 text-left text-sm text-error transition hover:bg-hover-bg">
-                           Remove Member
+                        <button
+                           type="button"
+                           onClick={() => {
+                              updateMemberRole(
+                                 member.id,
+                                 member.boardId,
+                                 "viewer"
+                              );
+                              setRoleOpen(false);
+                           }}
+                           className="w-full px-3 py-2 text-left text-xs text-text-primary hover:bg-hover-bg"
+                        >
+                           Viewer
                         </button>
+                        
                      </div>
                   )}
-               </div>
+                  
+               </>
             )}
          </div>
+         )}
+         {member.role !== "owner" && (
+            <button
+               type="button"
+               className="text-xs font-medium text-error transition hover:opacity-80"
+               onClick={() => removeMember(member.id, member.boardId)}
+            >
+               Remove
+            </button>
+         )}
       </div>
    );
 }

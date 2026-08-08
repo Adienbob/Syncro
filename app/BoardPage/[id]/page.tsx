@@ -10,6 +10,7 @@ import { useTasks } from "@/app/features/tasks/hooks/useTasks";
 import InviteMemberModal from "@/app/features/boards/components/members/InviteMemberModal";
 import ActivityList from "@/app/features/activity/components/ActivityList";
 import { useTasksRealtime } from "@/app/features/tasks/hooks/useTaskRealtime";
+import MembersModal from "@/app/features/boards/components/members/boardMembersPanel";
 
 export default function BoardPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = use(params);
@@ -80,6 +81,7 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
                <div className="flex gap-10 items-center">
                   <AddTaskModal id={id} />
                   <InviteMemberModal boardId={id} />
+                  <MembersModal boardId={id} />
                </div>
             </div>
             <div className="flex gap-5 mb-4">

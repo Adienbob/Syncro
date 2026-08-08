@@ -32,13 +32,18 @@ export async function POST(
 
    const member = users.data[0];
 
-   const { error } = await supabase
+   const { data, error } = await supabase
    .from("board_members")
    .insert({
       board_id: boardId,
       user_id: member.id,
       role,
-   });
+      display_name: member.fullName ?? member.username ?? email,
+      email: member.emailAddresses[0]?.emailAddress ?? email, 
+      image_url: member.imageUrl
+   })
+   .select()
+   .single()
 
    if (error) {
       if (error.code === "23505") {
@@ -54,7 +59,7 @@ export async function POST(
    }
    
    return Response.json(
-      { message: "Member invited successfully." },
+      data,
       { status: 201 }
    );
 }

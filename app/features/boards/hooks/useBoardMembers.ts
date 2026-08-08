@@ -12,7 +12,7 @@ interface UseBoardMember {
    members: BoardMember[];
 
    removeMember: (memberId: string, boardId: string) => Promise<void>;
-   inviteMember: (id: string, email: string, role: "editor" | "viewer") => Promise<void>
+   inviteMember: (boardId: string, email: string, role: "editor" | "viewer") => Promise<void>
    updateMemberRole: (memberId: string, boardId: string, role: "owner" | "editor" | "viewer") => Promise<void>;
 }
 
@@ -31,7 +31,6 @@ export function useBoardMember(): UseBoardMember {
 
       const myRole = getRole(members, boardId, user?.id )
 
-      console.log(myRole)
       if (myRole !== "owner") {
          toast.error("You don't have permission");
          return;
@@ -42,8 +41,10 @@ export function useBoardMember(): UseBoardMember {
             method: "DELETE",
          });
 
+         const data = await res.json()
+
          if (!res.ok) {
-            throw new Error("Failed");
+            throw new Error(data.error || "Failed to remove member")
          }
 
          dispatch({
@@ -93,6 +94,8 @@ export function useBoardMember(): UseBoardMember {
             throw new Error(data.error || "Failed to update member role");
          }
 
+
+
          dispatch({
             type: "UPDATE_MEMBER",
             payload: {
@@ -111,24 +114,19 @@ export function useBoardMember(): UseBoardMember {
       }
    }
 
-   async function inviteMember( id: string, email: string, role: "editor" | "viewer" ) {
+   async function inviteMember( boardId: string, email: string, role: "editor" | "viewer" ) {
       if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
-      const myRole = members.find(
-         (m) => m.boardId === id && m.userId === user?.id
-      )?.role;
-
-      console.log(myRole)
-      console.log("hello")
+      const myRole = getRole(members, boardId, user?.id )
 
       if (myRole !== "owner") {
          toast.error("You don't have permission");
          return;
       }
       try {
-         const res = await fetch(`/api/boards/${id}/members`, {
+         const res = await fetch(`/api/boards/${boardId}/members`, {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
@@ -154,6 +152,9 @@ export function useBoardMember(): UseBoardMember {
                   userId: data.user_id,
                   role: data.role,
                   joinedAt: data.joined_at,
+                  displayName: data.display_name,
+                  imageUrl: data.image_url,
+                  email: data.email
                },
             },
          });

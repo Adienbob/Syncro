@@ -42,6 +42,9 @@ type DBBoardMember = {
    id: string;
    board_id: string;
    user_id: string;
+   display_name: string;
+   image_url: string;
+   email: string;
    role: "owner" | "editor" | "viewer";
    joined_at: string;
 };
@@ -79,6 +82,9 @@ export const AppProvider = ({ children }: Props) => {
             id: member.id,
             boardId: member.board_id,
             userId: member.user_id,
+            displayName: member.display_name,
+            imageUrl: member.image_url,
+            email: member.email,
             role: member.role,
             joinedAt: member.joined_at,
          }));

@@ -61,6 +61,10 @@ export async function POST(req: Request) {
     
     const { data: board, error } = await supabase.rpc("create_board", {
       p_title: title,
+      p_display_name: user.fullName ?? user.username ?? user.emailAddresses[0]?.emailAddress,
+      p_email: user.emailAddresses[0]?.emailAddress,
+      p_image_url: user.imageUrl
+      
     });
 
     const { data: member, error: memberError } = await supabase

@@ -33,6 +33,9 @@ export interface BoardMember {
    id: string;
    boardId: string;
    userId: string;
+   displayName: string;
+   imageUrl: string;
+   email: string;
    role: "owner" | "editor" | "viewer";
    joinedAt: string;
 }
