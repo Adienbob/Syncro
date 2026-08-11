@@ -62,7 +62,7 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
    })
 
    return (
-      <div className="">
+      <section className="min-h-screen bg-surface-lowest">
          <Header 
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
@@ -138,6 +138,6 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
                <ActivityList boardId={id} />
             </div>
          </div>
-      </div>
+      </section>
    )
 }

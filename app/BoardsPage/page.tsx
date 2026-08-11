@@ -33,7 +33,7 @@ export default function Boards() {
    })
 
    return (
-      <section>
+      <section className="min-h-screen bg-surface-lowest">
          <Header 
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
