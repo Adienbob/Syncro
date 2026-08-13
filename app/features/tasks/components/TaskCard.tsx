@@ -6,6 +6,7 @@ import { useDraggable } from "@dnd-kit/core"
 import TaskModal from "./TaskDetailsModal";
 import ConfirmDialog from "@/app/shared/ui/ConfirmationDialog";
 import TaskAssignee from "./TaskAssignee";
+import { useAppContext } from "@/app/state/AppContext";
 
 export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean}) {
    const { deleteTask, editTask, moveTask} = useTasks(task.boardId)
@@ -23,6 +24,10 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
       priority: "medium" as "low" | "medium" | "high",
       dueDate: "",
    });
+   const { state } = useAppContext()
+
+   const assignee = state.members.find((member) => member.userId === task.assigneeId) ?? null;
+
 
    // Moving Task
    const [movingTaskId, setMovingTaskId] = useState<string | null>(null)
@@ -30,7 +35,7 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
    return (
       <article className={` relative bg-surface-low p-4 border border-border rounded-[8px] grid gap-2`}>
          <div className="flex justify-between items-center">
-            <span className="px-2 py-0.5 rounded-[4px] text-primary-light bg-primary-light/10 leading-[14px] tracking-[0.55px] text-[11px] font-medium">{task.status.toLowerCase()}</span>
+            <span className={`px-2 py-0.5 rounded-[4px] text-primary-light bg-primary-light/10 leading-[14px] tracking-[0.55px] text-[11px] font-medium ${task.status.toLowerCase() === "todo" ? "text-red-500" : task.status.toLowerCase() === "in-progress" ? "text-yellow-500" : "text-green-500"}`}>{task.status.toLowerCase()}</span>
             <div className="flex gap-4 items-center">
                <button 
                   aria-label="Edit Task"
@@ -199,7 +204,7 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
                </button>
             </div>
          </div>
-         <TaskAssignee assigneeId={task.assigneeId} />
+         <TaskAssignee assignee={assignee} />
          <button className="bg-primary text-[#EDE0FF] px-4 py-2 rounded-[8px] text-[14px] font-semibold" onClick={() => setIsOpen(true)}>
          View
          </button>

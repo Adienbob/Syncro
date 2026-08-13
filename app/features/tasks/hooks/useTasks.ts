@@ -173,6 +173,7 @@ export function useTasks(boardId: string): UseTasksReturn {
          );
 
       } catch (error) {
+         console.log(error)
          toast.error(assigneeId
          ? "Failed to assign task."
          : "Failed to unassign task.");

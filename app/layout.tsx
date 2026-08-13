@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
         <html lang="en" className="h-full antialiased">
-          <body className="h-full">
+          <body className="h-full bg-surface-lowest">
               <AppProvider>{children}</AppProvider>
           </body>
         </html>

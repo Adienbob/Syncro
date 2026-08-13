@@ -65,7 +65,7 @@ export default function TaskModal({
                   key={member.id}
                   value={member.userId}
                 >
-                  {member.userId}
+                  {member.displayName}
                 </option>
             ))}
           </select>

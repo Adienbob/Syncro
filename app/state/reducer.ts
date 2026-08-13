@@ -129,11 +129,6 @@ export function reducer(state: AppState, action: Actions) {
             ),
          };
       case "DELETE_TASK":
-         console.log(
-            "Reducer DELETE",
-            action.payload.id,
-            state.tasks.map(t => t.id)
-         );
 
          return {
             ...state,

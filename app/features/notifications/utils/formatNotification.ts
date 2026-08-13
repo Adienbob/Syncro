@@ -14,7 +14,7 @@ export function formatNotification(
          return {
             id: notification.id,
             title: "Board Invitation",
-            description: `${actor} invited you to "${board}".`,
+            description: `${actor} invited you to "${board} board".`,
             boardId: notification.boardId,
             isRead: notification.isRead,
             createdAt: notification.createdAt,
@@ -24,7 +24,7 @@ export function formatNotification(
          return {
             id: notification.id,
             title: "Role Updated",
-            description: `${actor} changed your role in "${board}".`,
+            description: `${actor} changed your role in "${board}" board.`,
             boardId: notification.boardId,
             isRead: notification.isRead,
             createdAt: notification.createdAt,
@@ -34,7 +34,7 @@ export function formatNotification(
          return {
             id: notification.id,
             title: "Task Assigned",
-            description: `${actor} assigned you "${notification.metadata.snapshot.task?.display}" in "${board}".`,
+            description: `${actor} assigned you "${notification.metadata.snapshot.task?.display}" task in "${board}" board.`,
             boardId: notification.boardId,
             isRead: notification.isRead,
             createdAt: notification.createdAt,

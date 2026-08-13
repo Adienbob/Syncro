@@ -56,19 +56,18 @@ export function formatActivity(
          message = `${actor.display} removed ${entity.display}`;
          break;
       case ActivityActions.TASK_ASSIGNED:
-         message = `${actor.display} assigned ${entity.display} to ${details.to}`;
+         message = `${actor.display} assigned ${entity.display} to ${details.assignee}`;
          break;
 
       case ActivityActions.TASK_UNASSIGNED:
-         message = `${actor.display} unassigned ${entity.display} from ${details.from}`;
+         message = `${actor.display} unassigned ${entity.display} from ${details.assignee}`;
          break;
 
       case ActivityActions.TASK_REASSIGNED:
-         message = `${actor.display} reassigned ${entity.display} from ${details.from} to ${details.to}`;
+         message = `${actor.display} reassigned ${entity.display} to ${details.newAssignee}`;
          break;
 
       default:
-         console.log(activity.action)
          message = "Unknown activity";
    }
 

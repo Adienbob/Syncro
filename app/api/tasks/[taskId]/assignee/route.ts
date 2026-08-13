@@ -23,6 +23,8 @@ export async function PATCH(
       const { assigneeId }: { assigneeId: string | null } = await req.json();
 
       const supabase = await createSupabaseServerClient();
+      let assigneeMember = null;
+
 
       const { data: task, error: taskError } = await supabase
          .from("tasks")
@@ -71,19 +73,21 @@ export async function PATCH(
       }
 
       if (assigneeId !== null) {
-         const { data: assigneeMember } = await supabase
+         const { data } = await supabase
             .from("board_members")
-            .select("id")
+            .select("id, user_id, display_name, image_url, email, role")
             .eq("board_id", task.board_id)
             .eq("user_id", assigneeId)
             .maybeSingle();
 
-         if (!assigneeMember) {
+         if (!data) {
             return Response.json(
                { error: "Assignee is not a board member" },
                { status: 400 }
             );
          }
+
+         assigneeMember = data;
       }
       
       // 5. Update task
@@ -132,13 +136,14 @@ export async function PATCH(
                      display: task.title,
                   },
                },
-               details: isReassignment ?
-               {
+               details: isReassignment
+               ? {
                   previousAssignee: task.assignee_id,
-                  newAssignee: assigneeId,
+                  newAssignee: assigneeMember?.display_name ?? null,
                }
-               : 
-               {}
+               : {
+                  assignee: assigneeMember?.display_name ?? null,
+               }
             },
          });
       } catch (error) {
