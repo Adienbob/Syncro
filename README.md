@@ -6,7 +6,7 @@ It helps teams organize work through boards, tasks, role-based collaboration, re
 
 ## 🚀 Live Demo
 
-[Syncro — Live Demo](https://syncro-kanban-adienbobs-projects.vercel.app/)
+[Syncro — Live Demo](https://syncro-kanban.org/)
 
 ## ✨ Features
 
