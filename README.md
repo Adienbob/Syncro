@@ -6,7 +6,7 @@ It helps teams organize work through boards, tasks, role-based collaboration, re
 
 ## 🚀 Live Demo
 
-[Syncro — Live Demo](https://syncro-kanban-adienbobs-projects.vercel.app/)
+[Syncro — Live Demo](https://syncro-kanban.org/)
 
 ## ✨ Features
 
@@ -180,32 +180,6 @@ Board owners can manage members and assign roles.
 | **Viewer** | View board content               |
 
 Permission checks are enforced through the application and protected backend operations.
-
-## 📸 Screenshots
-
-### Dashboard
-
-> Add dashboard screenshot here.
-
-### Board
-
-> Add board screenshot here.
-
-### Activity Log
-
-> Add activity timeline screenshot here.
-
-### Notifications
-
-> Add notifications screenshot here.
-
-### Members
-
-> Add members/invite screenshot here.
-
-### Mobile
-
-> Add mobile screenshot here.
 
 ## 🚀 Getting Started
 
