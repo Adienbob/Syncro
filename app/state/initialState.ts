@@ -462,4 +462,4 @@ const demoState: AppState = {
    ],
 };
 
-export { defaultState, demoState };
+export { defaultState, demoState, demoBoardId };

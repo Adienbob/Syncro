@@ -39,7 +39,6 @@ export function useBoards(): UseBoardsReturn {
             body: JSON.stringify({ title }),
          });
          const {board, member} = await res.json()
-         console.log(member)
    
          dispatch({ type: "ADD_BOARD", payload: {id: board.id, title, userId: board.user_id, createdAt: board.created_at } })
 
