@@ -10,15 +10,12 @@ export async function GET() {
       .from("tasks")
       .select("*");
 
-      console.log(data)
-
    if (error) {
       return Response.json(
          { error: error.message },
          { status: 500 }
       );
    }
-
    return Response.json(data);
 }
 

@@ -213,6 +213,7 @@ export default function BoardCard(board: Board) {
 
                <button
                type="button"
+               aria-label="Save"
                onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -233,6 +234,7 @@ export default function BoardCard(board: Board) {
 
                <button
                type="button"
+               aria-label="Cancel"
                onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();

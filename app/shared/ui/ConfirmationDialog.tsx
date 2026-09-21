@@ -51,6 +51,7 @@ export default function ConfirmDialog({
          <div className="mt-6 flex justify-center gap-4">
             <button
                type="button"
+               aria-label="Cancel"
                onClick={onCancel}
                className="rounded-lg border border-border bg-surface-high px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-highest"
             >
@@ -59,6 +60,7 @@ export default function ConfirmDialog({
 
             <button
                type="button"
+               aria-label="Confirm"
                onClick={onConfirm}
                className="rounded-lg bg-error px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90"
             >
