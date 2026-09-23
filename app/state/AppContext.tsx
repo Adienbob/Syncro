@@ -146,6 +146,9 @@ export const AppProvider = ({ children }: Props) => {
       function loadDemo() {
          dispatch({type: "SET_BOARDS", payload: {boards: demoState.boards}})
          dispatch({type: "SET_TASKS", payload: {tasks: demoState.tasks}})
+         dispatch({type: "SET_MEMBERS", payload: {members: demoState.members}})
+         dispatch({type: "SET_ACTIVITIES", payload: {activities: demoState.activities}})
+         dispatch({type: "SET_NOTIFICATIONS", payload: {notifications: demoState.notifications}})
          setIsLoading(false)
       }
       

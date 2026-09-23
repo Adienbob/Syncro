@@ -3,7 +3,7 @@ import { useTasks } from "../hooks/useTasks"
 import { useState } from "react"
 import { Task } from "@/app/types/models"
 import { useDraggable } from "@dnd-kit/core"
-import TaskModal from "./TaskDetailsModal";
+import TaskModal from "./TaskDetailsModal"
 import ConfirmDialog from "@/app/shared/ui/ConfirmationDialog";
 import TaskAssignee from "./TaskAssignee";
 import { useAppContext } from "@/app/state/AppContext";
@@ -27,7 +27,6 @@ export default function TaskCard({task, overlay}: {task: Task, overlay?: boolean
    const { state } = useAppContext()
 
    const assignee = state.members.find((member) => member.userId === task.assigneeId) ?? null;
-
 
    // Moving Task
    const [movingTaskId, setMovingTaskId] = useState<string | null>(null)

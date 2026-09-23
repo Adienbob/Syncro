@@ -60,7 +60,7 @@ export default function ConfirmDialog({
 
             <button
                type="button"
-               aria-label="Confirm"
+               aria-label="Dialog Confirm"
                onClick={onConfirm}
                className="rounded-lg bg-error px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90"
             >

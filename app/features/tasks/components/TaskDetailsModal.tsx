@@ -26,9 +26,9 @@ export default function TaskModal({
         
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-text-primary text-lg font-semibold">
+          <h3 className="text-text-primary text-lg font-semibold">
             Task Details
-          </h2>
+          </h3>
 
           <button
             onClick={onClose}
@@ -40,9 +40,9 @@ export default function TaskModal({
 
         {/* Content */}
         <div className="grid gap-3">
-          <h3 className="text-text-primary text-xl font-semibold">
+          <h4 className="text-text-primary text-xl font-semibold">
             {task.title}
-          </h3>
+          </h4>
 
           <p className="text-text-secondary">
             {task.description}
@@ -100,12 +100,13 @@ export default function TaskModal({
         <div className="mt-6 flex justify-end gap-2">
           <button
             onClick={onClose}
+            aria-label="Close"
             className="px-4 py-2 rounded bg-surface-high text-text-primary"
           >
             Close
           </button>
 
-          <button className="px-4 py-2 rounded bg-primary text-white">
+          <button aria-label="Edit" className="px-4 py-2 rounded bg-primary text-white">
             Edit
           </button>
         </div>

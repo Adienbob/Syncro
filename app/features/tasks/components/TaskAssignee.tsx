@@ -26,7 +26,7 @@ export default function TaskAssignee({
             height={24}
          />
 
-         <span className="text-xs text-text-secondary">
+         <span aria-label="Hussien Walid" className="text-xs text-text-secondary">
             {assignee.displayName}
          </span>
       </div>
