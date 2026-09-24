@@ -31,6 +31,7 @@ export default function AddTaskModal({ id }: { id: string }) {
          </button>
 
          <div
+            data-testid="add-task-modal"
             className={
                addingTask
                   ? "fixed inset-0 z-50 flex items-center justify-center bg-black/50"
@@ -91,7 +92,7 @@ export default function AddTaskModal({ id }: { id: string }) {
                      className="bg-primary text-[#EDE0FF] px-4 py-2 rounded-[8px] text-sm font-semibold"
                      onClick={handleAddTask}
                   >
-                     Add Task
+                     Create Task
                   </button>
 
                   <button
