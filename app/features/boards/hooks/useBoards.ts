@@ -25,8 +25,7 @@ export function useBoards(): UseBoardsReturn {
    
    async function addBoard(title: string) {
       // Check if the user Signed in 
-      if (!isSignedIn) {
-         router.push("/sign-in");
+      if (!requireAuth({ isSignedIn, router })) {
          return;
       }
 
